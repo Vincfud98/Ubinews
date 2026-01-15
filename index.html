@@ -3,1843 +3,976 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UbiNews | Feed Completo</title>
+    <title>UbiNews | Inteligência Diária</title>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <style>
-        /* --- IDENTIDADE VISUAL --- */
-        :root {
-            --brand-primary: #c39364;
-            --brand-secondary: #c39367;
-            --bg-body: #f9f9f9;
-            --bg-paper: #ffffff;
-            --text-main: #222;
-            --text-light: #555;
-            --border-color: #e0e0e0;
-            --bg-summary: #f8f6f3;
-            --bg-hover: #f8f8f8;
-            
-            --font-display: 'Playfair Display', serif;
-            --font-body: 'Merriweather', serif;
-            --font-ui: 'Inter', sans-serif;
-            
-            --shadow-card: 0 5px 15px rgba(0,0,0,0.05);
-            --shadow-card-hover: 0 12px 25px rgba(0,0,0,0.08);
-            --shadow-header: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-ui);
-            line-height: 1.6;
-            padding-bottom: 60px;
-            position: relative;
-        }
-        
-        /* Esconde o banner do Google Translate */
-        .goog-te-banner-frame { 
-            display: none !important; 
-            visibility: hidden !important; 
-            height: 0 !important; 
-            width: 0 !important; 
-        }
-
-        .goog-te-banner {
-            display: none !important;
-        }
-
-        .goog-te-banner-frame.skiptranslate {
-            display: none !important;
-        }
-
-        body > .skiptranslate {
-            display: none !important;
-        }
-
-        /* Estilos para o Google Translate Widget */
-        .goog-te-gadget {
-            font-family: var(--font-ui) !important;
-        }
-
-        .goog-te-combo {
-            padding: 8px 12px !important;
-            border: 1px solid #ddd !important;
-            border-radius: 5px !important;
-            background: white !important;
-            font-size: 0.9rem !important;
-            color: #333 !important;
-            min-width: 140px !important;
-            font-family: var(--font-ui) !important;
-        }
-
-        .goog-te-gadget span {
-            display: none !important;
-        }
-
-        /* --- CABEÇALHO ELEGANTE --- */
-        header {
-            background: linear-gradient(135deg, #fff 0%, #fcfcfc 100%);
-            border-bottom: 1px solid rgba(195, 147, 100, 0.2);
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.04);
-        }
-
-        .header-top {
-            background: var(--brand-primary);
-            padding: 2px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-top-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header-date {
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-edition {
-            color: rgba(255,255,255,0.9);
-            font-size: 0.8rem;
-            font-weight: 400;
-        }
-
-        .header-top-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-main {
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .brand-logo {
-            width: 60px;
-            height: 60px;
-            background: var(--brand-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 900;
-            box-shadow: 0 4px 12px rgba(195, 147, 100, 0.3);
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand h1 {
-            font-family: var(--font-display);
-            font-size: 2.4rem;
-            color: var(--text-main);
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            margin: 0;
-            line-height: 1;
-        }
-        
-        .brand span { 
-            color: var(--brand-primary); 
-        }
-
-        .brand-tagline {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            font-weight: 400;
-            margin-top: 5px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-family: var(--font-ui);
-        }
-
-        .header-actions { 
-            display: flex; 
-            gap: 20px; 
-            align-items: center; 
-        }
-
-        .btn-action {
-            background-color: var(--brand-primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-            letter-spacing: 0.3px;
-            box-shadow: 0 4px 12px rgba(195, 147, 100, 0.2);
-        }
-        .btn-action:hover { 
-            background-color: var(--brand-secondary); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(195, 147, 100, 0.3);
-        }
-
-        .header-nav {
-            padding: 15px 40px;
-            background: rgba(248, 248, 248, 0.8);
-            border-top: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-            justify-content: center;
-        }
-
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            padding: 5px 0;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--brand-primary);
-        }
-
-        .nav-links a.active {
-            color: var(--brand-primary);
-            font-weight: 600;
-        }
-
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--brand-primary);
-            border-radius: 2px;
-        }
-
-        /* --- CONTAINER FEED --- */
-        .feed-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 30px;
-        }
-
-        /* --- SEPARADOR DE DATA --- */
-        .date-separator {
-            text-align: center;
-            margin: 70px 0 50px 0;
-            position: relative;
-        }
-
-        .date-separator span {
-            background: var(--brand-primary);
-            color: white;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-family: var(--font-ui);
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative; 
-            z-index: 2;
-            display: inline-block;
-            box-shadow: 0 3px 8px rgba(195, 147, 100, 0.2);
-        }
-
-        .date-separator::before {
-            content: ""; 
-            position: absolute; 
-            top: 50%; 
-            left: 0; 
-            right: 0;
-            border-top: 2px dashed #e0e0e0; 
-            z-index: 1;
-        }
-
-        /* --- CARD DE ESTUDO --- */
-        .study-card {
-            background: var(--bg-paper);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 70px;
-            box-shadow: var(--shadow-card);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .study-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: var(--shadow-card-hover);
-            border-color: #d0d0d0;
-        }
-
-        /* Área de Imagem no Card */
-        .card-image-area {
-            width: 100%;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            background: #f8f8f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            max-height: 600px;
-        }
-
-        .card-image-area img {
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: 600px;
-            object-fit: contain;
-            display: block;
-            transition: transform 0.5s ease;
-            background-color: transparent;
-            padding: 20px;
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        .card-image-area:hover img {
-            transform: scale(1.10);
-        }
-
-        .upload-overlay {
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            color: white; 
-            font-weight: 600; 
-            font-size: 1.1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(2px);
-        }
-
-        .card-image-area:hover .upload-overlay { 
-            opacity: 4; 
-        }
-
-        /* Conteúdo do Card */
-        .card-content { 
-            padding: 40px; 
-        }
-
-        .card-header { 
-            margin-bottom: 25px; 
-            padding-bottom: 20px; 
-            border-bottom: 1px solid #f0f0f0; 
-        }
-
-        .category-tag {
-            font-size: 0.75rem; 
-            font-weight: 800; 
-            text-transform: uppercase;
-            color: var(--brand-primary); 
-            letter-spacing: 1.5px; 
-            display: block; 
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-family: var(--font-display); 
-            font-size: 2.1rem; 
-            line-height: 1.2;
-            color: var(--text-main); 
-            margin: 0;
-            font-weight: 900;
-        }
-
-        /* Box de Resumo */
-        .summary-box {
-            background-color: var(--bg-summary);
-            border-left: 5px solid var(--brand-primary);
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 0 8px 8px 0;
-            position: relative;
-        }
-
-        .summary-box::before {
-            content: "📋";
-            position: absolute;
-            left: -15px;
-            top: 25px;
-            background: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            border: 2px solid var(--brand-primary);
-        }
-
-        .summary-title {
-            font-family: var(--font-ui); 
-            font-size: 0.8rem; 
-            font-weight: 800;
-            text-transform: uppercase; 
-            color: var(--brand-secondary); 
-            margin-bottom: 12px; 
-            display: block;
-            letter-spacing: 1px;
-        }
-
-        .summary-text {
-            font-family: var(--font-body); 
-            font-size: 1.1rem;
-            color: #444; 
-            text-align: justify;
-            line-height: 1.7;
-        }
-
-        /* Footer do Card */
-        .card-footer {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding-top: 25px;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .themes-section {
-            max-width: 70%; 
-        }
-
-        .themes-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-light);
-            letter-spacing: 0.5px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .themes-content {
-            font-size: 0.95rem; 
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .btn-read {
-            background: white; 
-            border: 2px solid var(--brand-primary); 
-            color: var(--brand-primary);
-            padding: 10px 28px; 
-            border-radius: 30px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: all 0.2s ease;
-            text-decoration: none; 
-            display: inline-block;
-            font-size: 0.95rem;
-            letter-spacing: 0.3px;
-        }
-        .btn-read:hover { 
-            background: var(--brand-primary); 
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(195, 147, 100, 0.2);
-        }
-
-        /* --- MODAL --- */
-        .modal-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0,0,0,0.88); 
-            z-index: 2000;
-            display: none; 
-            justify-content: center; 
-            align-items: flex-start;
-            padding: 40px 20px; 
-            overflow-y: auto;
-        }
-        .modal-overlay.active { 
-            display: flex; 
-        }
-
-        .modal-container {
-            background: white; 
-            width: 100%; 
-            max-width: 1000px;
-            padding: 50px; 
-            border-radius: 12px; 
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            animation: modalAppear 0.3s ease;
-        }
-
-        @keyframes modalAppear {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .close-btn {
-            position: absolute; 
-            top: 25px; 
-            right: 30px; 
-            font-size: 2.8rem;
-            cursor: pointer; 
-            color: #bbb; 
-            line-height: 1;
-            transition: color 0.2s ease;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        .close-btn:hover { 
-            color: var(--brand-primary); 
-            background: #f9f9f9;
-        }
-
-        .modal-tools {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 20px; 
-            margin-bottom: 35px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .modal-tools-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .modal-tools-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .translate-btn {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            color: #555;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .translate-btn:hover {
-            background: #e9e9e9;
-            border-color: #ccc;
-        }
-
-        .translate-btn.active {
-            background: var(--brand-primary);
-            color: white;
-            border-color: var(--brand-primary);
-        }
-
-        .modal-header {
-            margin-bottom: 30px;
-        }
-
-        .modal-meta {
-            font-size:0.85rem; 
-            color:#777; 
-            font-weight:700; 
-            margin-bottom:10px; 
-            text-transform:uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .modal-meta span {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .modal-title {
-            font-family:var(--font-display); 
-            font-size:2.4rem; 
-            line-height:1.2; 
-            color:#1a1a1a;
-            margin-top: 5px;
-        }
-
-        /* IMAGEM NO MODAL */
-        .modal-image-container {
-            width: 100%;
-            margin: 30px 0;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            background: #f8f8f8;
-            border: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            max-height: 700px;
-            padding: 0;
-        }
-
-        .modal-image-container img {
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: 700px;
-            object-fit: contain;
-            background-color: transparent;
-            padding: 30px;
-            border-radius: 0;
-            box-shadow: none;
-        }
-
-        /* Seções do Modal */
-        .modal-section {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .modal-section:last-child {
-            border-bottom: none;
-        }
-
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            color: var(--brand-primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Áreas de tradução específicas */
-        .translatable {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .translatable .original-text {
-            display: block;
-        }
-
-        .translatable .translated-text {
-            display: none;
-            font-style: italic;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-            margin-top: 10px;
-        }
-
-        .translation-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: #4CAF50;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-            z-index: 1;
-        }
-
-        .full-text {
-            font-family: var(--font-body); 
-            font-size: 1.15rem; 
-            line-height: 1.8; 
-            color: #333; 
-            text-align: justify;
-        }
-        .full-text p { 
-            margin-bottom: 1.5em; 
-        }
-
-        .translation-section {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-
-        .translation-section h4 {
-            font-family: var(--font-ui);
-            font-size: 1rem;
-            color: var(--brand-primary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .translation-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .lang-btn {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .lang-btn:hover {
-            background: #f5f5f5;
-            transform: translateY(-1px);
-        }
-
-        .lang-btn.active {
-            background: var(--brand-primary);
-            color: white;
-            border-color: var(--brand-primary);
-        }
-
-        /* --- CORREÇÃO DAS BANDEIRAS --- */
-        .flag-svg {
-            width: 20px;
-            height: 15px;
-            border-radius: 2px;
-            border: 1px solid #ddd;
-            background-size: cover;
-            background-position: center;
-            display: inline-block;
-        }
-
-        /* Usando imagens reais via CDN para garantir a exibição correta */
-        .flag-brazil {
-            background-image: url('https://flagcdn.com/w40/br.png');
-        }
-        .flag-uk {
-            background-image: url('https://flagcdn.com/w40/gb.png');
-        }
-        .flag-spain {
-            background-image: url('https://flagcdn.com/w40/es.png');
-        }
-        .flag-france {
-            background-image: url('https://flagcdn.com/w40/fr.png');
-        }
-
-        /* Classes para textos em diferentes idiomas */
-        .text-portuguese {
-            display: block;
-        }
-        
-        .text-english, .text-spanish, .text-french {
-            display: none;
-        }
-
-        /* --- PDF MODAL --- */
-        .pdf-modal {
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.92); 
-            z-index: 3000; 
-            justify-content: center; 
-            align-items: center; 
-            backdrop-filter: blur(3px);
-        }
-        .pdf-modal.active { 
-            display: flex; 
-        }
-
-        .pdf-content {
-            background: white; 
-            padding: 50px; 
-            border-radius: 12px; 
-            width: 90%; 
-            max-width: 500px;
-            text-align: center; 
-            border-top: 5px solid var(--brand-primary);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            animation: modalAppear 0.3s ease;
-        }
-
-        .pdf-content h3 {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #222;
-        }
-
-        .pdf-content p {
-            color:#666; 
-            font-size:1rem; 
-            margin-bottom:25px;
-            line-height: 1.6;
-        }
-
-        /* --- LOADER PDF --- */
-        #pdf-loader {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 1);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: #333;
-            font-size: 1.2rem;
-            gap: 20px;
-        }
-
-        .loader-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--brand-primary);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            .feed-container {
-                max-width: 95%;
-                padding: 0 20px;
-            }
-            
-            .card-content { 
-                padding: 30px; 
-            }
-            
-            .card-title { 
-                font-size: 1.8rem; 
-            }
-        }
-
-        @media (max-width: 992px) {
-            .card-image-area {
-                min-height: 250px;
-                max-height: 450px;
-            }
-            
-            .card-image-area img {
-                max-height: 600px;
-                padding: 15px;
-            }
-            
-            .modal-image-container {
-                min-height: 350px;
-                max-height: 500px;
-            }
-            
-            .modal-image-container img {
-                max-height: 500px;
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-top, .header-main, .header-nav {
-                padding: 15px 20px;
-            }
-            
-            .brand h1 {
-                font-size: 1.8rem;
-            }
-            
-            .brand-logo {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-            
-            .header-top {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .nav-links {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-            
-            .card-content { 
-                padding: 25px; 
-            }
-            
-            .card-title { 
-                font-size: 1.6rem; 
-            }
-            
-            .card-image-area {
-                min-height: 200px;
-                max-height: 350px;
-            }
-            
-            .card-image-area img {
-                max-height: 350px;
-                padding: 10px;
-            }
-            
-            .modal-image-container {
-                min-height: 300px;
-                max-height: 450px;
-            }
-            
-            .modal-image-container img {
-                max-height: 450px;
-                padding: 15px;
-            }
-            
-            .card-footer { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 20px; 
-            }
-            
-            .themes-section {
-                max-width: 100%;
-            }
-            
-            .btn-read { 
-                width: 100%; 
-                text-align: center; 
-            }
-            
-            .modal-container {
-                padding: 30px 20px;
-                max-width: 95%;
-            }
-            
-            .modal-title {
-                font-size: 1.8rem;
-            }
-            
-            .modal-tools {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .modal-tools-left, .modal-tools-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .translation-controls {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .feed-container {
-                padding: 0 15px;
-            }
-            
-            .card-content { 
-                padding: 20px; 
-            }
-            
-            .summary-box {
-                padding: 20px;
-            }
-            
-            .date-separator span {
-                padding: 8px 20px;
-                font-size: 0.85rem;
-            }
-            
-            .pdf-content {
-                padding: 30px 20px;
-            }
-            
-            .lang-btn {
-                padding: 6px 10px;
-                font-size: 0.8rem;
-            }
-            
-            .brand-text {
-                text-align: center;
-            }
-            
-            .header-main {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-            
-            .card-image-area {
-                min-height: 180px;
-                max-height: 300px;
-            }
-            
-            .card-image-area img {
-                max-height: 300px;
-                padding: 8px;
-            }
-            
-            .modal-image-container {
-                min-height: 250px;
-                max-height: 350px;
-            }
-            
-            .modal-image-container img {
-                max-height: 350px;
-                padding: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <header id="topnav">
-        <div class="header-top">
-            <div class="header-top-left">
-                <div class="header-date">
-                    <i class="far fa-calendar"></i>
-                    <span id="currentDate"></span>
-                </div>
-                <div class="header-edition"></div>
-            </div>
-            <div class="header-top-right">
-                <div id="google_translate_element_header"></div>
-            </div>
-        </div>
-        
-        <div class="header-main">
-            <div class="brand">
-                <div class="brand-logo">U</div>
-                <div class="brand-text">
-                    <h1>Ubi<span>News</span></h1>
-                    <div class="brand-tagline">Notícias</div>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="btn-action" onclick="openPdfModal()">
-                    <i class="fas fa-file-pdf"></i> Gerar PDF Completo
-                </button>
-            </div>
-        </div>
-        
-        <nav class="header-nav">
-            <ul class="nav-links">
-                <li><a href="#" class="active">Notícias Atuais</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="feed-container" id="feedContainer">
-        </main>
-
-    <div class="modal-overlay" id="readModal">
-        <div class="modal-container">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            
-            <div class="modal-tools">
-                <div class="modal-tools-left">
-                    <div id="googleTranslateBtn" style="display:none;"></div> </div>
-                <div class="modal-tools-right">
-                    <span style="font-size:0.8rem; color:#888; font-weight:600;">
-                        <i class=""></i>
-                    </span>
-                </div>
-            </div>
-
-            <div id="modalContent"></div>
-        </div>
-    </div>
-
-    <div class="pdf-modal" id="pdfModal">
-        <div class="pdf-content">
-            <h3>Gerar PDF Completo</h3>
-            <p>
-                Este PDF conterá todas as 20 notícias com resumo e textos na íntegra, formatados para estudo.
-            </p>
-            <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                <button class="btn-action" id="btnGenPdf" onclick="generatePDF()">
-                    <i class="fas fa-download"></i> Confirmar e Baixar
-                </button>
-                <button class="btn-action" style="background:#f0f0f0; color:#333;" onclick="closePdfModal()">
-                    <i class="fas fa-times"></i> Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="pdf-loader">
-        <div class="loader-spinner"></div>
-        <div>Gerando PDF, aguarde...</div>
-    </div>
-
-    <script type="text/javascript">
-        // Função para inicializar o Google Translate
-        function googleTranslateElementInit() {
-            var oldBanner = document.querySelector('.goog-te-banner-frame');
-            if (oldBanner) oldBanner.style.display = 'none';
-            
-            new google.translate.TranslateElement({
-                pageLanguage: 'pt',
-                includedLanguages: 'en,es,fr,pt',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false,
-                multilanguagePage: true
-            }, 'google_translate_element_header');
-
-            setTimeout(function() {
-                var extraElements = document.querySelectorAll('#google_translate_element_modal, #google_translate_element_pdf');
-                extraElements.forEach(function(el) {
-                    if (el) el.remove();
-                });
-                var banner = document.querySelector('.goog-te-banner-frame');
-                if (banner) {
-                    banner.style.display = 'none';
-                    banner.style.visibility = 'hidden';
-                    banner.style.height = '0';
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        reading: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            gold: "#c39364",
+                            dark: "#1a1a1a",
+                            light: "#f4f4f5"
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    }
                 }
-                document.body.style.top = '0px';
-            }, 1000);
+            }
         }
     </script>
-    
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <style>
+        /* Google Translate Customization */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+        .goog-te-gadget span { display: none !important; }
+        .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+        /* Mantemos o combo acessível no DOM mas invisível */
+        .goog-te-combo { opacity: 0; height: 0; width: 0; overflow: hidden; position: absolute; pointer-events: none; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c39364; border-radius: 3px; }
+        
+        /* Line Clamp for 3 lines */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Tab Animations */
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Loader */
+        .loader-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #c39364;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Flags */
+        .flag-icon { width: 20px; height: 14px; display: inline-block; background-size: cover; border-radius: 2px; border: 1px solid #ddd; vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-[#fcfcfc] text-slate-800 antialiased font-sans selection:bg-brand-gold selection:text-white">
+
+    <header class="fixed top-0 w-full z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300" id="main-header">
+        <div class="max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-slate-600 hover:text-brand-gold">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center gap-2 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_lHPfbyFhxIP0ptIdo8mkYx1E5rjl9u_S6OaTQpwzdWfAQ=s900-c-k-c0x00ffffff-no-rj" alt="Logo UbiNews" class="h-9 w-9 rounded object-cover shadow-sm group-hover:opacity-80 transition-opacity">
+                    <div class="flex flex-col">
+                        <span class="font-serif font-bold text-xl leading-none tracking-tight">Ubi<span class="text-brand-gold">News</span></span>
+                        <span class="text-[0.6rem] uppercase tracking-[0.2em] text-slate-400 font-bold">Inteligência Diária</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden md:flex flex-1 max-w-md mx-8 relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por tema, país ou palavra-chave..." 
+                       class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-brand-gold/50 focus:bg-white transition-all outline-none">
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="google_translate_element_header"></div>
+                
+                <div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden border border-slate-300 cursor-pointer">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=UbiUser" alt="User">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-16 min-h-screen max-w-[1600px] mx-auto">
+        
+        <aside class="hidden lg:block w-72 fixed h-[calc(100vh-64px)] overflow-y-auto border-r border-slate-200 bg-white p-6 z-30">
+            <h3 class="font-serif font-bold text-lg mb-6 flex items-center gap-2">
+                <i class="fas fa-filter text-brand-gold text-sm"></i> Filtros
+            </h3>
+
+            <div class="mb-8">
+                <h4 class="text-xs font-bold uppercase text-slate-400 tracking-widest mb-3">Região</h4>
+                <div class="space-y-1" id="regionFilters">
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="text-xs font-bold uppercase text-slate-400 tracking-widest mb-3">Tema</h4>
+                <div class="space-y-1" id="themeFilters">
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h4 class="text-xs font-bold uppercase text-slate-400 tracking-widest mb-3">Tags Populares</h4>
+                <div class="flex flex-wrap gap-2" id="tagFilters">
+                </div>
+            </div>
+            
+            <button onclick="clearFilters()" class="w-full py-2 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors border-t border-slate-100 mt-4">
+                Limpar Filtros
+            </button>
+        </aside>
+
+        <div id="mobileMenu" class="fixed inset-0 z-50 bg-white transform -translate-x-full transition-transform duration-300 lg:hidden overflow-y-auto">
+            <div class="p-4 border-b flex justify-between items-center">
+                <span class="font-serif font-bold text-xl">Filtros</span>
+                <button onclick="toggleMobileMenu()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="p-6">
+                <div id="mobileFiltersTarget"></div>
+            </div>
+        </div>
+
+        <main class="flex-1 lg:ml-72 p-4 md:p-8 bg-[#fcfcfc]">
+            
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-brand-gold uppercase tracking-widest mb-1 block" id="currentDateDisplay"></span>
+                    <h1 class="font-serif font-bold text-3xl md:text-4xl text-slate-900">Feed Diário</h1>
+                </div>
+                <div class="text-right">
+                    <span class="text-2xl font-bold text-slate-900" id="newsCount">0</span>
+                    <span class="text-sm text-slate-500">atualizações hoje</span>
+                </div>
+            </div>
+
+            <div id="feedGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            </div>
+            
+            <div id="emptyState" class="hidden text-center py-20">
+                <div class="inline-block p-4 rounded-full bg-slate-100 mb-4"><i class="fas fa-search text-slate-400 text-2xl"></i></div>
+                <h3 class="text-lg font-bold text-slate-700">Nenhum resultado encontrado</h3>
+                <p class="text-slate-500">Tente ajustar os filtros ou sua busca.</p>
+                <button onclick="clearFilters()" class="mt-4 text-brand-gold font-bold hover:underline">Limpar filtros</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="newsModal" class="fixed inset-0 z-[60] hidden bg-white overflow-y-auto animate-[fadeIn_0.3s_ease]">
+        
+        <button onclick="closeNewsModal()" class="fixed top-6 right-6 z-50 h-10 w-10 bg-white/20 backdrop-blur-md hover:bg-white text-white hover:text-black rounded-full flex items-center justify-center transition-all shadow-lg border border-white/30">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+
+        <div class="relative w-full h-[60vh] md:h-[70vh] group">
+            <img id="modalHeroImg" src="" class="w-full h-full object-cover" alt="Hero">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-20 max-w-5xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <span id="modalCategory" class="px-3 py-1 bg-brand-gold text-white text-xs font-bold uppercase tracking-widest rounded-sm"></span>
+                    <span id="modalDate" class="text-white/80 text-xs font-medium uppercase tracking-wider border-l border-white/30 pl-3"></span>
+                </div>
+                <h1 id="modalTitle" class="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight mb-4 drop-shadow-lg"></h1>
+                <p id="modalSubtitle" class="text-lg md:text-xl text-white/90 font-light max-w-3xl leading-relaxed drop-shadow-md hidden md:block"></p>
+            </div>
+        </div>
+
+        <div class="max-w-[1200px] mx-auto px-4 py-8 md:py-12 flex flex-col lg:flex-row gap-12">
+            
+            <div class="lg:w-3/4">
+                
+                <div class="sticky top-0 bg-white z-20 border-b border-slate-200 mb-8 pt-2">
+                    <div class="flex gap-6 overflow-x-auto pb-px no-scrollbar" id="modalTabs">
+                        <button class="tab-btn active text-sm font-bold uppercase tracking-wider py-3 border-b-2 border-brand-gold text-brand-gold" onclick="switchTab('tab-resumo')">Resumo & Texto</button>
+                        <button class="tab-btn text-sm font-bold uppercase tracking-wider py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800" onclick="switchTab('tab-prova')">O Tema na Prova</button>
+                        <button class="tab-btn text-sm font-bold uppercase tracking-wider py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800" onclick="switchTab('tab-analise')">Análise</button>
+                        <button class="tab-btn text-sm font-bold uppercase tracking-wider py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800" onclick="switchTab('tab-historico')">Histórico</button>
+                        <button class="tab-btn text-sm font-bold uppercase tracking-wider py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800" onclick="switchTab('tab-pontos')">Pontos Principais</button>
+                    </div>
+                </div>
+
+                <div id="tab-resumo" class="tab-content active">
+                    <div class="flex items-center justify-between mb-6 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <span class="text-xs font-bold text-slate-500 uppercase">Idioma do Texto:</span>
+                        <div class="flex gap-2">
+                            <button onclick="translateContent('pt')" class="hover:bg-white p-1 rounded shadow-sm transition"><div class="flag-icon" style="background-image: url('https://flagcdn.com/w40/br.png')"></div></button>
+                            <button onclick="translateContent('en')" class="hover:bg-white p-1 rounded shadow-sm transition"><div class="flag-icon" style="background-image: url('https://flagcdn.com/w40/gb.png')"></div></button>
+                            <button onclick="translateContent('es')" class="hover:bg-white p-1 rounded shadow-sm transition"><div class="flag-icon" style="background-image: url('https://flagcdn.com/w40/es.png')"></div></button>
+                            <button onclick="translateContent('fr')" class="hover:bg-white p-1 rounded shadow-sm transition"><div class="flag-icon" style="background-image: url('https://flagcdn.com/w40/fr.png')"></div></button>
+                        </div>
+                    </div>
+
+                    <div class="prose prose-lg prose-slate max-w-none font-reading text-slate-700 leading-loose">
+                        <div class="mb-8 p-6 bg-[#fcfcfc] border-l-4 border-brand-gold rounded-r-lg italic text-slate-600 shadow-sm">
+                            <h3 class="text-brand-gold not-italic font-bold text-sm uppercase mb-2">Resumo Executivo</h3>
+                            <div id="modalSummary"></div>
+                        </div>
+
+                        <div class="mb-10 bg-slate-900 text-white rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg shadow-slate-900/20 transform transition-all hover:scale-[1.01]">
+                            <div>
+                                <h4 class="text-brand-gold font-bold uppercase tracking-widest text-xs mb-2">
+                                    <i class="fas fa-graduation-cap mr-1"></i> Área de Treinamento
+                                </h4>
+                                <h3 class="font-serif font-bold text-2xl mb-1">Simulado Geral do Dia</h3>
+                                <p class="text-slate-400 text-sm max-w-lg leading-relaxed">
+                                    Prepare-se com questões inéditas baseadas em <strong>todas as notícias</strong> do feed de hoje, abrangendo todos os tópicos.
+                                </p>
+                            </div>
+                            <button class="flex-shrink-0 px-8 py-4 bg-brand-gold hover:bg-white hover:text-brand-gold text-white font-bold text-sm uppercase tracking-wider rounded-lg transition-all shadow-md group">
+                                Começar Agora <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                        <div id="modalFullText" class="mt-8 text-justify"></div>
+                    </div>
+                </div>
+
+                <div id="tab-prova" class="tab-content">
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-8 mb-6">
+                        <h3 class="font-serif font-bold text-2xl text-blue-900 mb-4 flex items-center gap-2">
+                            <i class="fas fa-graduation-cap"></i> Incidência em Provas
+                        </h3>
+                        <div id="modalExamAnalysis" class="space-y-4 text-blue-800"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 border border-slate-200 rounded-lg">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Disciplinas Correlatas</span>
+                            <div class="mt-2 flex flex-wrap gap-2" id="modalDisciplines"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-analise" class="tab-content">
+                    <div class="flex items-start gap-4 mb-8">
+                        <div class="w-16 h-16 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Professor" alt="Prof">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Comentário do Especialista</h4>
+                            <p class="text-slate-500 text-sm">Equipe UbiNews</p>
+                        </div>
+                    </div>
+                    <div id="modalTeacherAnalysis" class="prose prose-slate max-w-none font-reading"></div>
+                </div>
+
+                <div id="tab-historico" class="tab-content">
+                    <div class="relative pl-8 border-l-2 border-slate-200 space-y-8" id="modalTimeline">
+                    </div>
+                    <div id="modalHistoricalText" class="mt-8 prose prose-slate"></div>
+                </div>
+
+                <div id="tab-pontos" class="tab-content">
+                    <div class="grid gap-4" id="modalKeyPoints">
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="font-bold text-lg mb-4">Glossário</h4>
+                        <div id="modalGlossary" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:w-1/4 space-y-8">
+                
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 shadow-sm sticky top-24">
+                    <h3 class="font-serif font-bold text-xl mb-4 text-brand-gold flex items-center gap-2">
+                        <i class="fas fa-map-signs"></i> Roadmap
+                    </h3>
+
+                    <div class="mb-6">
+                        <h4 class="text-xs font-bold uppercase text-slate-900 mb-2">Espectro Político</h4>
+                        <div id="modalSpectrum" class="space-y-3">
+                            </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-slate-900 mb-2">Plano de Estudos</h4>
+                        <a href="#" class="block bg-brand-dark text-white p-3 rounded-lg text-center text-sm font-bold hover:bg-slate-800 transition-colors">
+                            <i class="fas fa-play-circle mr-2"></i> Assistir Aula Relacionada
+                        </a>
+                        <a href="#" class="block text-center text-xs text-slate-500 mt-2 hover:text-brand-gold">
+                            Ver Fascículo Ubique #42
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-serif font-bold text-lg mb-4">Pessoas de Interesse</h4>
+                    <div class="flex flex-wrap gap-2" id="modalPeople">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <script>
-        // =========================================================
-        // DATA ATUAL NO CABEÇALHO
-        // =========================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentDateElement = document.getElementById('currentDate');
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-            };
-            currentDateElement.textContent = now.toLocaleDateString('pt-BR', options);
-            
-            renderFeed();
-        });
+        // --- DATA & CONFIG ---
+        
+        // Mapeamento de Filtros
+        const REGIONS = [
+            "América do Sul", "América do Norte", "América Central e Caribe", 
+            "Europa", "Ásia e Oceania", "África", "Oriente Médio"
+        ];
+        
+        const THEMES = [
+            "Governança Global", "Economia e Comércio", "Segurança e Paz", 
+            "Meio Ambiente", "Energia", "Migrações", "Direitos Humanos", 
+            "Integração Regional", "Política Externa Brasileira"
+        ];
 
-        // =========================================================
-        // DADOS: 20 NOTÍCIAS COMPLETAS
-        // =========================================================
-        const newsData = [
+        // --- DADOS COMPLETOS COM ESPECTRO POLÍTICO ---
+        let newsData = [
             {
                 id: 1,
                 dateIso: "2025-09-19",
                 category: "Segurança Internacional",
                 title: "Veto dos EUA à paz e crise em Gaza reacendem debate sobre Estado palestino na ONU",
                 imageUrl: "https://agro.insper.edu.br/storage/mediaarticles/November2023/7Yo8rXlPxUAlrV3i0jxC.png",
-                summary: "Pela sexta vez, os Estados Unidos votaram no Conselho de Segurança da ONU uma resolução que exigia cessar-fogo imediato em Gaza, acesso humanitário e libertação de reféns. Na Assembleia em Nova York, a França deve oficializar o reconhecimento do Estado palestino, propondo relançar a solução dos dois Estados. A iniciativa francesa busca combinar segurança para Israel e isolamento do Hamas, com apoio de grupos de trabalho ocidentais e árabes. Obstáculos incluem resistência israelense, posições internas em países europeus e desafios na governança palestina, embora a cooperação com a Arábia Saudita seja vista como potencial influência de longo prazo.",
+                summary: "Pela sexta vez, os Estados Unidos votaram no Conselho de Segurança da ONU uma resolução que exigia cessar-fogo imediato em Gaza, acesso humanitário e libertação de reféns. Na Assembleia em Nova York, a França deve oficializar o reconhecimento do Estado palestino, propondo relançar a solução dos dois Estados.",
                 fullText: `Na Assembleia em Nova York, a França deve oficializar o reconhecimento do Estado palestino, propondo relançar a solução dos dois Estados. No Conselho de Segurança, uma resolução exigindo o fim das restrições à ajuda humanitária em Gaza, cessar-fogo permanente e libertação de reféns teve 14 votos favoráveis, mas foi vetada pelos EUA, que responsabilizam o Hamas e defendem o direito de Israel à autodefesa.\n\nA decisão provocou indignação entre outros países, agravada pela declaração da ONU sobre fome em Gaza e acusações de uma comissão independente de possíveis crimes genocidas por Israel. A iniciativa francesa, a ser anunciada em 22 de setembro, busca combinar segurança para Israel e isolamento do Hamas, com apoio de grupos de trabalho ocidentais e árabes. Especialistas avisam que, sem medidas concretas como sanções, o reconhecimento terá pouco efeito.\n\nObstáculos incluem resistência israelense, posições internas em países europeus e desafios na governança palestina, embora a cooperação com a Arábia Saudita seja vista como potencial influência de longo prazo. À luz das teorias realistas, a postura norte-americana e israelense evidencia a primazia de interesses de segurança e alianças estratégicas sobre normas humanitárias; já abordagens construtivistas destacam como narrativas, legitimações simbólicas (reconhecimento estatal) e campanhas diplomáticas remodelam identidades e normas, potencialmente alterando as expectativas de comportamento dos Estados.`,
-                themes: "Segurança internacional e manutenção da paz, Agenda internacional e o Brasil, O multilateralismo de dimensão universal: panorama geral, Políticas externas nacionais, Oriente Médio: política externa dos principais países e relações com o Brasil, A ONU, as conferências internacionais e os órgãos multilaterais",
-                meta: "Fonte: RFI"
+                themes: "Segurança internacional e manutenção da paz, Agenda internacional",
+                meta: "Fonte: RFI",
+                region: "Oriente Médio",
+                theme: "Segurança e Paz",
+                tags: ["ONU", "Israel-Palestina", "EUA"],
+                politicalView: {
+                    left: "Critica o veto dos EUA como cumplicidade em violações de direitos humanos e 'genocídio'. Defende o reconhecimento imediato da Palestina e sanções a Israel.",
+                    right: "Apoia o veto dos EUA como necessário para garantir a segurança de Israel e eliminar o Hamas. Vê o reconhecimento unilateral da Palestina como recompensa ao terrorismo."
+                }
             },
             {
                 id: 2,
                 dateIso: "2025-09-16",
                 category: "Comércio Internacional",
-                title: "Acordo MERCOSUL-EFTA",
+                title: "Acordo MERCOSUL-EFTA: Diversificação Estratégica",
                 imageUrl: "https://www.infomoney.com.br/wp-content/uploads/2025/09/Captura-de-tela-2025-09-21-122234.png?quality=70",
-                summary: "O acordo MERCOSUL-EFTA simboliza a busca do bloco sul-americano pela diversificação de parceiros comerciais. Pontos de atenção: eliminação de tarifas em 90% do comércio, inclusão de temas como comércio eletrônico e compromissos ambientais vinculados aos ODS da ONU. Para o MERCOSUL, este acordo representa uma oportunidade de diversificação de mercados e aumento das exportações, especialmente de produtos agrícolas e agroindustriais. Para a EFTA, o acordo proporciona acesso privilegiado ao mercado sul-americano de mais de 295 milhões de habitantes. As negociações começaram em 2017 e foram concluídas após 12 rodadas de negociações.",
-                fullText: `Os Estados Membros do MERCOSUL (a República Argentina, a República Federativa do Brasil, à República do Paraguai e a República Oriental do Uruguai) e os Estados da EFTA (a Islândia, o Principado de Liechtenstein, o Reino da Noruega e a Confederação Suíça) assinaram um Acordo de Livre Comércio (ALC) em 16 de setembro.\n\nO acordo abrange comércio de bens, serviços, investimentos, compras governamentais, propriedade intelectual, comércio eletrônico, comércio e desenvolvimento sustentável, solução de controvérsias e questões aduaneiras e de facilitação de comércio.\n\nPara o MERCOSUL, este acordo representa uma oportunidade de diversificação de mercados e aumento das exportações, especialmente de produtos agrícolas e agroindustriais. Para a EFTA, o acordo proporciona acesso privilegiado ao mercado sul-americano de mais de 295 milhões de habitantes.\n\nAs negociações começaram em 2017 e foram concluídas após 12 rodadas de negociações. O acordo prevê a eliminação de tarifas para mais de 90% do comércio bilateral, com cronogramas de desgravação que variam de 0 a 15 anos, dependendo da sensibilidade dos produtos.\n\nSetores como maquinário, produtos farmacêuticos, produtos químicos, instrumentos de precisão e relógios suíços terão acesso imediato ao mercado do MERCOSUL. Em contrapartida, produtos agrícolas como carne bovina, aves, soja, milho, arroz, frutas e vinhos terão acesso facilitado ao mercado da EFTA.\n\nO acordo também estabelece disciplinas modernas sobre comércio eletrônico, incluindo a proibição de taxas de alfândega sobre transmissões eletrônicas, proteção ao consumidor em linha, assinaturas eletrônicas e autenticação, e disposições sobre proteção de dados pessoais.\n\nEm matéria de desenvolvimento sustentável, o acordo inclui compromissos para promover o comércio e o investimento de forma a apoiar objetivos ambientais e trabalhistas, em consonância com os Objetivos de Desenvolvimento Sustentável da ONU. As partes reafirmam seus compromissos com os acordos ambientais multilaterais e com os princípios e direitos fundamentais no trabalho da Organização Internacional do Trabalho.`,
-                themes: "Integração Regional; Mercosul; EFTA; Comércio Exterior.",
-                meta: "Fonte: MRE"
+                summary: "O acordo MERCOSUL-EFTA simboliza a busca do bloco sul-americano pela diversificação de parceiros comerciais. Pontos de atenção: eliminação de tarifas em 90% do comércio.",
+                fullText: `Os Estados Membros do MERCOSUL e os Estados da EFTA assinaram um Acordo de Livre Comércio (ALC). O acordo abrange comércio de bens, serviços, investimentos e compras governamentais. A medida visa reduzir a dependência de grandes blocos tradicionais e aumentar a competitividade dos produtos sul-americanos na Europa rica (Suíça, Noruega, Islândia, Liechtenstein).`,
+                themes: "Integração Regional; Mercosul",
+                meta: "Fonte: MRE",
+                region: "América do Sul",
+                theme: "Economia e Comércio",
+                tags: ["Mercosul", "EFTA", "Livre Comércio"],
+                politicalView: {
+                    left: "Vê com cautela a assimetria econômica; preocupa-se com o impacto na indústria nacional e defende proteção aos pequenos produtores e normas ambientais rígidas.",
+                    right: "Celebra a abertura comercial, a redução de tarifas e o acesso a mercados de alta renda, defendendo a eficiência econômica e a modernização via competição."
+                }
             },
-            {
-                id: 3,
-                dateIso: "2025-12-07",
-                category: "Direitos Humanos",
-                title: "Refugiados Climáticos: Vácuo Jurídico",
-                imageUrl: "https://ogimg.infoglobo.com.br/in/24114871-be3-961/FT1086A/85882766_TOPSHOTA-womancarries-her-child-as-she-crosses-a-wooden-bridge-in-the-refugee-camp-of-Mo.jpg",
-                summary: "A crise no Chifre da África expõe a falta de proteção legal para 'refugiados climáticos' na Convenção de 1951. O debate opõe a securitização do clima (países desenvolvidos) à responsabilidade histórica e financiamento (países em desenvolvimento). Mais de 2 milhões de pessoas foram forçadas a abandonar seus lares devido a inundações repentinas pós-El Niño. A agência intensificou o apelo para o reconhecimento formal do termo 'refugiado climático', categoria ainda inexistente na Convenção de 1951, que limita a proteção a vítimas de perseguição política, racial ou religiosa. A ONU lançou um apelo de US$ 850 milhões para resposta humanitária, mas apenas 35% foi financiado até o momento.",
-                fullText: `O Alto Comissariado da ONU para Refugiados (ACNUR) emitiu um alerta urgente sobre a situação humanitária no Chifre da África, onde mais de 2 milhões de pessoas foram forçadas a abandonar seus lares devido a inundações repentinas pós-El Niño.\n\nAs chuvas torrenciais que atingiram a região entre outubro e dezembro de 2025 são as mais intensas já registradas, com volumes 300% acima da média histórica. Os rios Juba e Shabelle transbordaram em múltiplos pontos, inundando vastas áreas da Somália, Etiópia e Quênia.\n\nNa Somália, mais de 1,2 milhão de pessoas foram deslocadas, com as regiões de Hiran, Middle Shabelle e Lower Shabelle sendo as mais afetadas. Campos de refugiados como o de Dadaab no Quênia, que já abrigava 350.000 refugiados somalis, recebeu mais 150.000 novos deslocados em três semanas.\n\nA agência intensificou o apelo para o reconhecimento formal do termo "refugiado climático", categoria ainda inexistente na Convenção de 1951, que limita a proteção a vítimas de perseguição política, racial ou religiosa.\n\nO alto comissário Filippo Grandi declarou: "Estamos testemunhando uma nova categoria de deslocamento forçado, onde as pessoas fogem não de perseguidores, mas de condições ambientais que tornam suas terras inabitáveis. O marco legal internacional precisa evoluir para proteger essas pessoas".\n\nA ONU lançou um apelo de US$ 850 milhões para resposta humanitária, mas apenas 35% foi financiado até o momento. As necessidades incluem abrigo de emergência, água potável, saneamento, assistência alimentar e serviços de saúde para prevenir surtos de cólera e malária.\n\nOrganizações humanitárias reportam condições extremamente precárias nos acampamentos improvisados, com superlotação, falta de saneamento básico e risco de violência de gênero. Crianças representam mais de 60% dos deslocados, com interrupção generalizada da educação.\n\nA crise ocorre em uma região já afetada por conflitos armados, insegurança alimentar crônica e governança frágil. Na Somália, o grupo militante Al-Shabaab explora o caos humanitário para recrutar membros e extorquir recursos de organizações de ajuda.\n\nEspecialistas em direito internacional discutem a necessidade de um protocolo adicional à Convenção de 1951 ou a criação de um instrumento legal separado para proteger pessoas deslocadas por causas ambientais. A Nova Agenda para os Refugiados, adotada em 2018, reconhece as mudanças climáticas como fator de deslocamento, mas não cria obrigações legais específicas.\n\nO Conselho de Segurança da ONU discutiu a crise em sessão fechada, com divergências sobre se questões climáticas devem ser tratadas como ameaças à segurança internacional. Países em desenvolvimento argumentam que os principais emissores históricos de gases de efeito estufa têm responsabilidade moral e financeira em apoiar os mais afetados.`,
-                themes: "Direitos Humanos; Populações e migrações; Meio Ambiente.",
-                meta: "Fonte: ONU News"
+            { 
+                id: 3, 
+                dateIso: "2025-12-07", 
+                category: "Direitos Humanos", 
+                title: "Refugiados Climáticos: Vácuo Jurídico", 
+                imageUrl: "https://ogimg.infoglobo.com.br/in/24114871-be3-961/FT1086A/85882766_TOPSHOTA-womancarries-her-child-as-she-crosses-a-wooden-bridge-in-the-refugee-camp-of-Mo.jpg", 
+                summary: "A crise no Chifre da África expõe a falta de proteção legal para 'refugiados climáticos' na Convenção de 1951.", 
+                fullText: "O Alto Comissariado da ONU para Refugiados (ACNUR) emitiu um alerta urgente sobre o deslocamento forçado causado por secas extremas. Juristas debatem a expansão do conceito de refúgio para incluir causas ambientais, enfrentando resistência de países desenvolvidos temerosos de novas ondas migratórias.", 
+                themes: "Direitos Humanos", 
+                meta: "Fonte: ONU", 
+                region: "África", 
+                theme: "Migrações", 
+                tags: ["Clima", "Refugiados", "ONU"],
+                politicalView: {
+                    left: "Defende a criação urgente do status jurídico de 'refugiado climático', argumentando que os países ricos (maiores poluidores) têm dívida histórica e dever de acolhimento.",
+                    right: "Prioriza a soberania nacional e o controle de fronteiras. Prefere ajuda humanitária local ('in loco') em vez de facilitar a imigração em massa para o Norte Global."
+                }
             },
-            {
-                id: 4,
-                dateIso: "2025-12-02",
-                category: "Energia",
-                title: "Opep+ e a Geopolítica do Petróleo",
-                imageUrl: "https://www.portalviu.com.br/wp-content/uploads/2016/12/Petr%C3%B3leo-mundial1.jpg",
-                summary: "A extensão dos cortes de produção demonstra a autonomia estratégica da Opep+ (Riad/Moscou) frente ao Ocidente. Sob a ótica do Realismo Econômico, o petróleo é usado como 'Statecraft' para equilibrar orçamentos e antecipar a desaceleração chinesa. Os cortes totalizam 3,66 milhões de barris por dia (bpd), representando cerca de 3,6% da oferta global. A decisão foi recebida como um sinal de autonomia política frente aos pedidos dos EUA e da Agência Internacional de Energia (AIE) por preços mais acessíveis. A Arábia Saudita, líder de facto da Opep+, manterá sua produção em aproximadamente 9 milhões de bpd, cerca de 1,5 milhão de bpd abaixo de sua capacidade total.",
-                fullText: `Em reunião ministerial decisiva realizada por videoconferência, a Opep+ optou por prorrogar os cortes voluntários de produção de petróleo até meados de 2026. A medida visa equilibrar os orçamentos fiscais dos petroestados diante da desaceleração da demanda chinesa e do aumento da produção nas Américas.\n\nOs cortes totalizam 3,66 milhões de barris por dia (bpd), representando cerca de 3,6% da oferta global. Desse total, 2 milhões de bpd são cortes voluntários que expirariam em junho de 2025, e 1,66 milhão de bpd são cortes adicionais que expirariam em dezembro de 2025. Todos serão estendidos até 30 de junho de 2026.\n\nA decisão foi recebida como um sinal de autonomia política frente aos pedidos dos EUA e da Agência Internacional de Energia (AIE) por preços mais acessíveis. O presidente Biden havia telefonado pessoalmente ao príncipe herdeiro saudês Mohammed bin Salman na semana anterior à reunião, pedindo aumento da produção para reduzir os preços da gasolina nos EUA antes das eleições de 2026.\n\nA Arábia Saudita, líder de facto da Opep+, manterá sua produção em aproximadamente 9 milhões de bpd, cerca de 1,5 milhão de bpd abaixo de sua capacidade total. A Rússia concordou em cortar 471.000 bpd de sua produção e 200.000 bpd de suas exportações de petróleo.\n\nAnalistas do mercado de petróleo apontam que a decisão reflete preocupações com a demanda futura, especialmente da China, onde o crescimento econômico desacelerou para 3,8% em 2025, abaixo das projeções. Além disso, o aumento da produção de petróleo de xisto nos EUA, que atingiu 14,2 milhões de bpd em novembro, pressiona os preços.\n\nA reunião também aprovou novas cotas de produção para 2026, com aumentos para Emirados Árabes Unidos (+200.000 bpd), Kuwait (+150.000 bpd) e Iraque (+100.000 bpd), enquanto a África recebeu reduções coletivas de 1,4 milhão de bpd devido a dificuldades de produção crônicas.\n\nO preço do petróleo Brent reagiu com alta de 4,2%, fechando a US$ 91,75 por barril, o maior nivel desde setembro de 2025. A AIE alertou que os preços elevados podem desacelerar ainda mais a economia global e retardar a transição energética.\n\nPaíses importadores de petróleo na Ásia e África expressaram preocupação com o impacto nas suas contas correntes e na inflação. A Índia, terceiro maior importador global, estima que a decisão aumentará sua fatura de importação de petróleo em US$ 15 bilhões anualmente.\n\nA Opep+ também decidiu realizar sua próxima reunião ministerial presencial em Viena em 1º de junho de 2026, marcando o retorno às reuniões presenciais após anos de encontros virtuais devido à pandemia e tensões geopolíticas.`,
-                themes: "Energia; Economia mundial; Geopolítica do Petróleo.",
-                meta: "Fonte: Bloomberg"
+            { 
+                id: 4, 
+                dateIso: "2025-12-02", 
+                category: "Energia", 
+                title: "Opep+ e a Geopolítica do Petróleo", 
+                imageUrl: "https://www.portalviu.com.br/wp-content/uploads/2016/12/Petr%C3%B3leo-mundial1.jpg", 
+                summary: "A extensão dos cortes de produção demonstra a autonomia estratégica da Opep+ frente ao Ocidente.", 
+                fullText: "Em reunião ministerial decisiva, a Opep+ decidiu manter os cortes voluntários de produção. A medida visa sustentar os preços do barril em meio à desaceleração econômica global, desafiando as pressões dos EUA e da Europa para baixar custos de energia.", 
+                themes: "Energia", 
+                meta: "Fonte: Bloomberg", 
+                region: "Oriente Médio", 
+                theme: "Energia", 
+                tags: ["Petróleo", "OPEP", "Arábia Saudita"],
+                politicalView: {
+                    left: "Critica a dependência global de combustíveis fósseis e o poder de cartéis energéticos. Defende aceleração da transição energética para reduzir a influência geopolítica da Opep.",
+                    right: "Analisa sob a ótica do interesse nacional e realismo: países produtores têm o direito de gerir seus recursos. Foca na segurança energética e estabilidade de preços."
+                }
             },
-            {
-                id: 5,
-                dateIso: "2025-12-06",
-                category: "Política Externa",
-                title: "Venezuela: 'Cautela Construtiva'",
-                imageUrl: "https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/12/Trump_Maduro.jpg?w=1200&h=900&crop=1",
-                summary: "A 'Cautela Construtiva' do Brasil busca manter canais de diálogo ('honest broker') e estabilidade regional. O Itamaraty equilibra o princípio constitucional da Não-Intervenção com a defesa da democracia, diferenciando-se da condenação ocidental e do apoio sino-russo. Após as eleições regionais e legislativas na Venezuela realizadas em 30 de novembro de 2025, o Conselho Nacional Eleitoral (CNE) ratificou uma ampla vitória da coalizão governista. Contudo, o relatório preliminar do Painel de Especialistas da ONU citou falta de transparência e irregularidades no processo de totalização.",
-                fullText: `Após as eleições regionais e legislativas na Venezuela realizadas em 30 de novembro de 2025, o Conselho Nacional Eleitoral (CNE) ratificou uma ampla vitória da coalizão governista, com o Partido Socialista Unido da Venezuela (PSUV) e aliados conquistando 18 dos 23 governos estaduais e 70% das prefeituras.\n\nContudo, o relatório preliminar do Painel de Especialistas da ONU citou falta de transparência e irregularidades no processo de totalização. O documento de 45 páginas, obtido pela imprensa internacional, lista múltiplas preocupações: ausência de observadores internacionais independentes, atrasos na liberação de resultados parciais, inconsistências nos registros de votação e limitações ao acesso da oposição aos meios de comunicação.\n\nEnquanto potências ocidentais condenaram o pleito - com a União Europeia declarando que "as eleições não cumpriram padrões democráticos mínimos" e os EUA anunciando novas sanções - e países como Rússia e China parabenizaram o resultado como "expressão democrática da vontade popular", o Brasil adotou uma postura de "cautela construtiva".\n\nO Itamaraty emitiu comunicado de três parágrafos que evitou tanto validar quanto condenar o processo eleitoral. O texto destacou "a importância do diálogo inclusivo" e "a necessidade de estabilidade regional", sem fazer referência às críticas da ONU ou aos resultados específicos.\n\nInternamente, o governo brasileiro enfrenta pressões divergentes: setores empresariais querem normalização das relações para expandir negócios, enquanto parlamentares da oposição e organizações de direitos humanos exigem condenação mais firme. O Congresso Nacional debate projeto de resolução que repudia as eleições venezuelanas, mais o governo trabalha para diluir o texto.\n\nAnalistas da política externa brasileira apontam que a postura reflete tentativa de equilibrar princípios democráticos com interesses estratégicos. O Brasil busca manter canal de diálogo com Caracas para influenciar possíveis aberturas políticas, gerenciar fluxos migratórios (mais de 400.000 venezuelanos vivem no Brasil) e limitar influência de potências extra-regionais.\n\nParalelamente, o Brasil coordena com outros países da América do Sul, especialmente Colômbia e Argentina, para desenvolver abordagem regional comum. O Grupo de Lima, mecanismo criado em 2017 para lidar com a crise venezuelana, encontra-se paralisado desde 2023 após mudanças de governo em vários países membros.\n\nO governo venezuelano respondeu às críticas internacionais acusando "intervencionismo" e destacando que mais de 8 milhões de venezuelanos votaram, com participação de 42%. A oposição dividida - parte boicotou, parte participou - alega que o CNE é controlado pelo governo e que condições desiguais de campanha distorceram os resultados.\n\nA situação permanece volátil, com economia venezuelana ainda frágil após recuperação modesta em 2024-2025, e diálogo entre governo e oposição suspenso desde maio de 2025. O Brasil mantém embaixador em Caracas e continua participando de mecanismos técnicos binacionais sobre fronteira, energia e comércio.`,
-                themes: "América do Sul; Política externa brasileira; Democracia.",
-                meta: "Fonte: Folha de S.Paulo"
+            { 
+                id: 5, 
+                dateIso: "2025-12-06", 
+                category: "Política Externa", 
+                title: "Venezuela: 'Cautela Construtiva'", 
+                imageUrl: "https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/12/Trump_Maduro.jpg?w=1200&h=900&crop=1", 
+                summary: "A 'Cautela Construtiva' do Brasil busca manter canais de diálogo e estabilidade regional.", 
+                fullText: "Após as eleições regionais contestadas, o Itamaraty adotou tom de 'cautela construtiva', evitando condenações abruptas para não perder a capacidade de interlocução, ao mesmo tempo em que cobra transparência nas atas eleitorais.", 
+                themes: "América do Sul", 
+                meta: "Fonte: Folha", 
+                region: "América do Sul", 
+                theme: "Política Externa Brasileira", 
+                tags: ["Venezuela", "Itamaraty", "Eleições"],
+                politicalView: {
+                    left: "Apoia a não-intervenção e a autodeterminação dos povos. Defende o diálogo diplomático como única saída e rejeita sanções que punem a população.",
+                    right: "Exige postura firme contra regimes autoritários. Critica a 'cautela' como complacência ideológica com ditaduras de esquerda e defende pressão internacional."
+                }
             },
-            {
-                id: 7,
-                dateIso: "2025-12-02",
-                category: "Energia",
-                title: "Opep+: Restrição de Oferta",
-                imageUrl: "https://s2-oglobo.glbimg.com/jRZgyO0Ak8Kwl3denhfc_tizmuA=/0x262:1920x1583/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2024/T/3/kRvwHxSwuUdjHs9pU7gg/petroleo.jpg",
-                summary: "A restrição de oferta pela Opep+ reafirma o papel do Estado na economia de energia, contrariando premissas liberais de autorregulação. O alinhamento Riad-Moscou prioriza interesses domésticos sobre a segurança energética global. A manobra reafirma a relevância do Realismo Econômico, onde a energia é instrumentalizada como ferramenta de poder estatal (Statecraft). Contrariando a premissa liberal de que os mercados se autorregulam perfeitamente, a ação do cartel demonstra como interesses nacionais de sobrevivência econômica e projeção de poder distorcem deliberadamente a oferta global.",
-                fullText: `Em reunião ministerial decisiva, a Opep+ optou por prorrogar os cortes voluntários de produção de petróleo até meados de 2026. A medida visa equilibrar os orçamentos fiscais dos petroestados diante da desaceleração da demanda chinesa e do aumento da produção nas Américas. A decisão foi recebida como um sinal de autonomia política frente aos pedidos dos EUA e da Agência Internacional de Energia (AIE) por preços mais acessíveis.\n\nA manobra reafirma a relevância do Realismo Econômico, onde a energia é instrumentalizada como ferramenta de poder estatal (Statecraft). Contrariando a premissa liberal de que os mercados se autorregulam perfeitamente, a ação do cartel demonstra como interesses nacionais de sobrevivência econômica e projeção de poder distorcem deliberadamente a oferta global. O episódio também sinaliza o contínuo alinhamento tático entre a Arábia Saudita e a Rússia na gestão do mercado de hidrocarbonetos, priorizando a estabilidade de seus regimes internos sobre as alianças tradicionais de segurança.`,
-                themes: "Energia e matriz energética; Economia mundial; Oriente Médio; Geopolítica do Petróleo.",
-                meta: "Fonte: Bloomberg / Financial Times"
+            { 
+                id: 7, 
+                dateIso: "2025-12-02", 
+                category: "Energia", 
+                title: "Opep+: Restrição de Oferta", 
+                imageUrl: "https://s2-oglobo.glbimg.com/jRZgyO0Ak8Kwl3denhfc_tizmuA=/0x262:1920x1583/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2024/T/3/kRvwHxSwuUdjHs9pU7gg/petroleo.jpg", 
+                summary: "A restrição de oferta reafirma o papel do Estado na economia de energia.", 
+                fullText: "Em reunião ministerial decisiva, a continuidade da restrição de oferta pela Arábia Saudita e Rússia sinaliza um alinhamento do 'Sul Global' energético, utilizando commodities como alavanca de poder político.", 
+                themes: "Energia", 
+                meta: "Fonte: FT", 
+                region: "Oriente Médio", 
+                theme: "Energia", 
+                tags: ["Realismo", "Economia"],
+                politicalView: {
+                    left: "Vê a manobra como resistência à hegemonia ocidental, mas alerta para o impacto inflacionário nos mais pobres e a necessidade de soberania energética renovável.",
+                    right: "Interpreta como jogo de mercado e soberania estatal. Defende que os países consumidores diversifiquem fornecedores e invistam em produção interna (ex: shale gas)."
+                }
             },
-            {
-                id: 9,
-                dateIso: "2025-12-11",
-                category: "Tecnologia",
-                title: "DREX e Soberania Monetária",
-                imageUrl: "https://seucreditodigital.com.br/wp-content/uploads/2025/11/drex-045.jpg",
-                summary: "O piloto do DREX reforça a soberania monetária estatal (lógica Chartalista) frente às criptomoedas descentralizadas. Insere-se na agenda do G20 e busca desdolarização marginal no comércio do Mercosul. O Banco Central do Brasil anunciou a fase piloto para a utilização do DREX (Real Digital) em operações cross-border (transfronteiriças) com parceiros comerciais vizinhos. A iniciativa busca criar uma infraestrutura de pagamento instantâneo internacional que reduza custos cambiais e aumente a eficiência das trocas no Mercosul.",
-                fullText: `O Banco Central do Brasil anunciou a fase piloto para a utilização do DREX (Real Digital) em operações cross-border (transfronteiriças) com parceiros comerciais vizinhos. A iniciativa busca criar uma infraestrutura de pagamento instantâneo internacional que reduza custos cambiais e aumente a eficiência das trocas no Mercosul. O projeto alinha-se às recomendações do G20 para a modernização dos pagamentos globais.\n\nNo campo da Economia Política, o movimento reflete a tendência de Desdolarização marginal das trocas regionais e a busca por soberania monetária na era digital. Diferente das criptomoedas descentralizadas (de viés libertário), as CBDCs (Moedas Digitais de Banco Central) reforçam o poder do Estado sobre a política monetária e a vigilância dos fluxos financeiros. A medida pode ser interpretada sob a lógica do Chartalismo, onde a moeda é uma criatura do Estado e sua modernização tecnológica é vital para manter o controle estatal sobre a unidade de conta e o meio de troca frente às inovações privadas.`,
-                themes: "Sistema Financeiro Nacional e Internacional; Economia Brasileira; Inovação e tecnologia; Integração Regional.",
-                meta: "Fonte: Valor Econômico"
+            { 
+                id: 9, 
+                dateIso: "2025-12-11", 
+                category: "Tecnologia", 
+                title: "DREX e Soberania Monetária", 
+                imageUrl: "https://seucreditodigital.com.br/wp-content/uploads/2025/11/drex-045.jpg", 
+                summary: "O piloto do DREX reforça a soberania monetária estatal frente às criptomoedas.", 
+                fullText: "O Banco Central do Brasil anunciou avanços no piloto do DREX (Real Digital). A moeda digital de banco central (CBDC) visa modernizar o sistema financeiro, permitindo contratos inteligentes, ao mesmo tempo que mantém o controle da política monetária nas mãos do Estado, contrapondo-se à descentralização das criptomoedas privadas.", 
+                themes: "Economia", 
+                meta: "Fonte: Valor", 
+                region: "América do Sul", 
+                theme: "Economia e Comércio", 
+                tags: ["DREX", "Banco Central", "Digital"],
+                politicalView: {
+                    left: "Apoia o DREX como ferramenta de inclusão financeira, combate à lavagem de dinheiro e evasão fiscal, reforçando o papel regulador do Estado.",
+                    right: "Expressa preocupação com a privacidade e o potencial de vigilância estatal excessiva sobre as transações individuais. Prefere moedas privadas ou descentralizadas."
+                }
             },
-            {
-                id: 10,
-                dateIso: "2025-12-03",
-                category: "Meio Ambiente",
-                title: "Tratado Global de Plásticos",
-                imageUrl: "https://apublica.org/wp-content/uploads/2024/12/CAPA-Producao-x-poluicao-as-disputas-que-travam-um-tratado-global-sobre-plasticos.jpg",
-                summary: "O INC-5 resultou em um 'regime híbrido' (sem teto de produção), refletindo a vitória do lobby petroquímico. Evidencia a tensão Norte-Sul na aplicação do princípio das Responsabilidades Comuns, Porém Diferenciadas (RCPD). A quinta e última rodada de negociações do Tratado Global de Plásticos (INC-5) encerrou-se em Busan com um texto de compromisso. O acordo estabelece metas vinculantes para gestão de resíduos e design circular, mas deixou de fora a proposta ambiciosa de limitar a produção de plásticos virgens, ponto vetado por grandes produtores petroquímicos.",
-                fullText: `A quinta e última rodada de negociações do Tratado Global de Plásticos (INC-5) encerrou-se em Busan com um texto de compromisso. O acordo estabelece metas vinculantes para gestão de resíduos e design circular, mas deixou de fora a proposta ambiciosa de limitar a produção de plásticos virgens, ponto vetado por grandes produtores petroquímicos. O resultado frustrou ambientalistas, que esperavam um instrumento mais robusto para conter a poluição na fonte.\n\nA dinâmica diplomática reflete o princípio das Responsabilidades Comuns, Porém Diferenciadas, onde o Sul Global exigiu garantias financeiras para a transição tecnológica, enquanto o Norte pressionou por padrões ambientais. O desfecho configura um "regime híbrido", típico do Institucionalismo Neoliberal, que avança de forma incremental através do consenso possível. A aposta é que a normatização inicial (soft law endurecendo gradualmente) crie incentivos de mercado para a inovação, mesmo sem a proibição direta da produção, equilibrando imperativos ecológicos e interesses industriais.`,
-                themes: "Meio ambiente; Desenvolvimento sustentável; A ONU e conferências internacionais; Indústria e Comércio.",
-                meta: "Fonte: The Guardian"
+            { 
+                id: 10, 
+                dateIso: "2025-12-03", 
+                category: "Meio Ambiente", 
+                title: "Tratado Global de Plásticos", 
+                imageUrl: "https://apublica.org/wp-content/uploads/2024/12/CAPA-Producao-x-poluicao-as-disputas-que-travam-um-tratado-global-sobre-plasticos.jpg", 
+                summary: "O INC-5 resultou em um 'regime híbrido', refletindo a vitória do lobby petroquímico.", 
+                fullText: "A quinta e última rodada de negociações do Tratado Global de Plásticos terminou com um acordo menos ambicioso que o esperado. Países produtores de petróleo bloquearam limites globais de produção, resultando num regime focado em reciclagem e gestão de resíduos, frustrando ambientalistas.", 
+                themes: "Meio Ambiente", 
+                meta: "Fonte: Guardian", 
+                region: "Ásia e Oceania", 
+                theme: "Meio Ambiente", 
+                tags: ["Poluição", "Tratado", "ONU"],
+                politicalView: {
+                    left: "Considera o resultado um fracasso capitulado às grandes corporações. Defende limites rígidos de produção e responsabilização total da indústria petroquímica.",
+                    right: "Defende que a inovação tecnológica e a reciclagem são soluções melhores que a proibição da produção, protegendo empregos e o desenvolvimento industrial."
+                }
             },
-            {
-                id: 11,
-                dateIso: "2025-12-08",
-                category: "Comércio",
-                title: "Índia-EFTA: Novo Modelo",
-                imageUrl: "https://external-preview.redd.it/india-four-nation-efta-set-to-sign-free-trade-agreement-to-v0-F2WN-NnjWHot3tw3BDsGWsOZ4b2p-fvXY8N-J4u_wLk.jpg?auto=webp&s=bf4f0289118934791546ca2f211b20ee2d7e519d",
-                summary: "O acordo Índia-EFTA vincula acesso a mercado a compromissos de investimento direto ($100 bi), refletindo a estratégia 'Make in India'. Demonstra Realismo Econômico ao diversificar parceiros e reduzir dependência da China. A Índia e a Associação Europeia de Livre Comércio (EFTA) finalizaram a ratificação do TEPA (Trade and Economic Partnership Agreement), um marco na diplomacia comercial de Nova Délhi. Diferente dos acordos tradicionais focados apenas em tarifas, este pacto inova ao incluir um compromisso legal do bloco europeu em investir US$ 100 bilhões na economia indiana ao longo de 15 anos.",
-                fullText: `A Índia e a Associação Europeia de Livre Comércio (EFTA) finalizaram a ratificação do TEPA (Trade and Economic Partnership Agreement), um marco na diplomacia comercial de Nova Délhi. Diferente dos acordos tradicionais focados apenas em tarifas, este pacto inova ao incluir um compromisso legal do bloco europeu em investir US$ 100 bilhões na economia indiana ao longo de 15 anos, visando a criação de 1 milhão de empregos. Em troca, a Índia reduz tarifas sobre produtos de alto valor agregado, como relógios suíços, chocolates e maquinário de precisão.\n\nO movimento reflete uma mudança tática na inserção internacional indiana: o uso do seu vasto mercado interno como moeda de troca para atrair capital produtivo e tecnologia (Make in India). Sob a ótica do Liberalismo Comercial, o acordo demonstra como economias complementares podem maximizar ganhos absolutos. Contudo, a preferência pelo EFTA em detrimento de um acordo rápido com a UE sinaliza um cálculo de Realismo Econômico: Nova Délhi busca diversificar parceiros e reduzir a dependência da China, evitando as condicionalidades ambientais e trabalhistas rígidas que travam as negociações com Bruxelas.`,
-                themes: "Economia mundial; Comércio Internacional; Ásia (Índia); Blocos Econômicos.",
-                meta: "Fonte: The Hindu"
+            { 
+                id: 11, 
+                dateIso: "2025-12-08", 
+                category: "Comércio", 
+                title: "Índia-EFTA: Novo Modelo", 
+                imageUrl: "https://external-preview.redd.it/india-four-nation-efta-set-to-sign-free-trade-agreement-to-v0-F2WN-NnjWHot3tw3BDsGWsOZ4b2p-fvXY8N-J4u_wLk.jpg?auto=webp&s=bf4f0289118934791546ca2f211b20ee2d7e519d", 
+                summary: "O acordo Índia-EFTA vincula acesso a mercado a compromissos de investimento direto.", 
+                fullText: "A Índia e a EFTA finalizaram um acordo comercial inovador onde a redução de tarifas indianas está condicionada a um compromisso da EFTA de investir US$ 100 bilhões na Índia em 15 anos, criando um precedente para o 'comércio desenvolvimentista'.", 
+                themes: "Comércio", 
+                meta: "Fonte: Hindu", 
+                region: "Ásia e Oceania", 
+                theme: "Economia e Comércio", 
+                tags: ["Índia", "EFTA", "Investimento"],
+                politicalView: {
+                    left: "Elogia a exigência de contrapartidas de investimento real e geração de empregos, vendo como um modelo para o Sul Global negociar com potências.",
+                    right: "Vê com ceticismo o 'gerenciamento de comércio' estatal. Prefere que o fluxo de investimentos seja ditado pela atratividade do mercado, não por obrigações contratuais."
+                }
             },
-            {
-                id: 12,
-                dateIso: "2025-12-06",
-                category: "Segurança",
-                title: "Japão e Coreia do Sul: Radares",
-                imageUrl: "https://external-preview.redd.it/japan-south-korea-near-agreement-on-defense-minister-visits-v0-NySwcXTyvejDvKdVWGXMxL02nS-0n4iEmLAk6lIrINo.jpeg?width=640&crop=smart&auto=webp&s=ff226cabb921e1a31a81e4b81acef1153b2018bd",
-                summary: "A cooperação militar Tóquio-Seul, mediada pelos EUA, é um exemplo de Neorealismo Defensivo. A ameaça comum (Coreia do Norte/China) força a superação de rivalidades, fortalecendo o 'Offshore Balancing' americano no Indo-Pacífico. Japão e Coreia do Sul ativaram oficialmente o sistema unificado de compartilhamento de dados de radares via Estados Unidos, superando o incidente diplomático de 2018. A medida permite que ambos os países e os EUA visualizem lançamentos de mísseis da Coreia do Norte instantaneamente, eliminando 'pontos cegos' na detecção.",
-                fullText: `Japão e Coreia do Sul ativaram oficialmente o sistema unificado de compartilhamento de dados de radares via Estados Unidos, superando o incidente diplomático de 2018 (quando um destróier sul-coreano travou a mira em um avião de patrulha japonês). A medida permite que ambos os países e os EUA visualizem lançamentos de mísseis da Coreia do Norte instantaneamente, eliminando "pontos cegos" na detecção. O rapprochement (reaproximação) ocorre apesar da persistente frieza nas relações públicas devido a disputas sobre o trabalho forçado na era colonial.\n\nEste alinhamento forçado é explicado pelo Neorealismo Defensivo (Waltz): a ameaça existencial comum (o programa nuclear de Pyongyang e a assertividade chinesa) obriga os Estados a priorizarem a sobrevivência e a segurança coletiva em detrimento de rivalidades históricas ou identitárias. O papel dos EUA como offshore balancer (equilibrador externo) foi vital para mitigar a desconfiança mútua, consolidando um triângulo de segurança no Indo-Pacífico que serve como contrapeso à arquitetura de poder chinesa na região.`,
-                themes: "Ásia e Oceania; Política Externa dos EUA, Japão e China; Segurança Internacional; Conflitos contemporâneos.",
-                meta: "Fonte: Kyodo News"
+            { 
+                id: 12, 
+                dateIso: "2025-12-06", 
+                category: "Segurança", 
+                title: "Japão e Coreia do Sul: Radares", 
+                imageUrl: "https://external-preview.redd.it/japan-south-korea-near-agreement-on-defense-minister-visits-v0-NySwcXTyvejDvKdVWGXMxL02nS-0n4iEmLAk6lIrINo.jpeg?width=640&crop=smart&auto=webp&s=ff226cabb921e1a31a81e4b81acef1153b2018bd", 
+                summary: "A cooperação militar Tóquio-Seul, mediada pelos EUA, é um exemplo de Neorealismo Defensivo.", 
+                fullText: "Japão e Coreia do Sul ativaram um sistema de compartilhamento de dados de radares em tempo real para monitorar mísseis da Coreia do Norte. A aproximação histórica, superando ressentimentos coloniais, visa conter a ameaça comum e a ascensão chinesa.", 
+                themes: "Segurança", 
+                meta: "Fonte: Kyodo", 
+                region: "Ásia e Oceania", 
+                theme: "Segurança e Paz", 
+                tags: ["Japão", "Coreia", "EUA"],
+                politicalView: {
+                    left: "Teme que a militarização da região e a formação de blocos estilo 'mini-OTAN' aumentem as tensões e a corrida armamentista na Ásia-Pacífico.",
+                    right: "Apoia fortemente a aliança das democracias liberais contra regimes autocráticos (China/Coreia do Norte), defendendo a 'paz através da força'."
+                }
             },
-            {
-                id: 13,
-                dateIso: "2025-12-10",
-                category: "Economia",
-                title: "Argentina e OCDE",
-                imageUrl: "https://www.moneytimes.com.br/uploads/2023/12/argentina-javier-milei-ocde.webp",
-                summary: "A busca da Argentina pela OCDE via reformas liberais exemplifica o uso de instituições internacionais como 'lock-in' de políticas internas. Sinaliza uma reorientação da política externa para o bloco ocidental, afastando-se do revisionismo. Em um passo decisivo para a entrada no 'clube dos países ricos', o legislativo argentino aprovou um conjunto de reformas regulatórias exigidas pelo roteiro de acessão à Organização para a Cooperação e Desenvolvimento Econômico (OCDE). O governo Milei utiliza o processo de adesão como um selo de qualidade para atrair investidores estrangeiros.",
-                fullText: `Em um passo decisivo para a entrada no "clube dos países ricos", o legislativo argentino aprovou um conjunto de reformas regulatórias exigidas pelo roteiro de acessão à Organização para a Cooperação e Desenvolvimento Econômico (OCDE). As medidas incluem normas de governança corporativa para estatais, leis anti-suborno e flexibilização de fluxos de capitais. O governo Milei utiliza o processo de adesão como um selo de qualidade para atrair investidores estrangeiros e "blindar" as reformas liberais contra futuras reversões políticas.\n\nO fenômeno ilustra a função das instituições internacionais como mecanismos de lock-in (travamento) de políticas domésticas, conforme postulado pelo Institucionalismo Liberal. Ao vincular a economia nacional a regras supranacionais rigorosas, o Estado sinaliza credibilidade aos mercados globais. Politicamente, a adesão à OCDE funciona como uma ferramenta de política externa para reorientar o eixo diplomático de Buenos Aires, afastando-se do "Sul Global" revisionista e buscando reinserção plena no bloco ocidental tradicional.`,
-                themes: "A economia mundial; Organismos econômicos internacionais (OCDE); Política externa da Argentina; Relações Internacionais.",
-                meta: "Fonte: Clarín"
+            { 
+                id: 13, 
+                dateIso: "2025-12-10", 
+                category: "Economia", 
+                title: "Argentina e OCDE", 
+                imageUrl: "https://www.moneytimes.com.br/uploads/2023/12/argentina-javier-milei-ocde.webp", 
+                summary: "A busca da Argentina pela OCDE via reformas liberais exemplifica o uso de instituições.", 
+                fullText: "Em um passo decisivo, a Argentina aceitou formalmente o convite para iniciar o processo de acessão à OCDE. O governo Milei aposta que o selo de 'boas práticas' da organização atrairá investimentos e ancorará suas reformas desregulamentadoras.", 
+                themes: "Economia", 
+                meta: "Fonte: Clarín", 
+                region: "América do Sul", 
+                theme: "Economia e Comércio", 
+                tags: ["Argentina", "OCDE", "Milei"],
+                politicalView: {
+                    left: "Critica a adesão como submissão a políticas neoliberais de austeridade que prejudicam os trabalhadores e aumentam a desigualdade social.",
+                    right: "Vê a entrada na OCDE como selo de qualidade institucional, essencial para modernizar a economia, atrair capital estrangeiro e reduzir o risco-país."
+                }
             },
-            {
-                id: 14,
-                dateIso: "2025-12-04",
-                category: "Espaço",
-                title: "Geopolítica Lunar: Bloco Chinês",
-                imageUrl: "https://clickpetroleoegas.com.br/wp-content/uploads/2024/10/China-surpreende-o-mundo-com-criacao-de-tijolos-lunares-e-da-inicio-ao-ambicioso-plano-de-construir-a-primeira-base-permanente-na-Lua.jpg",
-                summary: "A expansão da ILRS chinesa marca a disputa normativa na governança espacial (Artemis vs. ILRS). Pequim usa a diplomacia científica como Soft Power para atrair o Sul Global e desafiar a hegemonia dos EUA. A China formalizou a entrada do Egito e da Tailândia na ILRS (International Lunar Research Station), seu projeto de base permanente no polo sul da Lua, previsto para a década de 2030. A adesão desses países emergentes é significativa, pois demonstra a capacidade de Pequim de atrair parceiros fora do eixo tradicional de potências espaciais.",
-                fullText: `A China formalizou a entrada do Egito e da Tailândia na ILRS (International Lunar Research Station), seu projeto de base permanente no polo sul da Lua, previsto para a década de 2030. A adesão desses países emergentes é significativa, pois demonstra a capacidade de Pequim de atrair parceiros fora do eixo tradicional de potências espaciais (como a Rússia), oferecendo cooperação tecnológica e científica sem as exigências políticas frequentemente associadas aos programas ocidentais.\n\nO fato marca uma nova fase na Geopolítica do Espaço (ou Exopolítica). A competição deixou de ser apenas tecnológica para se tornar normativa: existem agora dois blocos rivais (Artemis vs. ILRS) definindo regras paralelas para a exploração e exploração de recursos extraplanetários. Sob a Teoria da Transição de Poder, a China utiliza a diplomacia científica como Soft Power para contestar a liderança norte-americana na definição das normas de governança dos bens comuns globais (e espaciais), recrutando o Sul Global para legitimar sua própria ordem internacional.`,
-                themes: "Novas tecnologias e relações internacionais; Política externa da China; Agenda internacional; Geopolítica.",
-                meta: "Fonte: SpaceNews"
+            { 
+                id: 14, 
+                dateIso: "2025-12-04", 
+                category: "Espaço", 
+                title: "Geopolítica Lunar: Bloco Chinês", 
+                imageUrl: "https://clickpetroleoegas.com.br/wp-content/uploads/2024/10/China-surpreende-o-mundo-com-criacao-de-tijolos-lunares-e-da-inicio-ao-ambicioso-plano-de-construir-a-primeira-base-permanente-na-Lua.jpg", 
+                summary: "A expansão da ILRS chinesa marca a disputa normativa na governança espacial.", 
+                fullText: "A China formalizou a entrada de novos parceiros (Egito e Etiópia) na Estação Internacional de Pesquisa Lunar (ILRS), competindo diretamente com os Acordos Artemis liderados pelos EUA. A disputa não é apenas tecnológica, mas sobre quem escreverá as regras de exploração e mineração espacial.", 
+                themes: "Geopolítica", 
+                meta: "Fonte: SpaceNews", 
+                region: "Ásia e Oceania", 
+                theme: "Governança Global", 
+                tags: ["China", "Espaço", "Lua"],
+                politicalView: {
+                    left: "Defende que o espaço deve ser 'patrimônio comum da humanidade', rejeitando a apropriação de recursos e a militarização por qualquer bloco (EUA ou China).",
+                    right: "Enxerga a corrida espacial como nova fronteira de competição estratégica. Defende investimentos maciços para garantir a supremacia tecnológica ocidental."
+                }
             },
-            {
-                id: 15,
-                dateIso: "2025-12-07",
-                category: "África",
-                title: "Sahel: Ruptura Monetária",
-                imageUrl: "https://assets.brasildefato.com.br/2025/02/image_processing20250130-804602-f16tm0.webp",
-                summary: "A saída do Franco CFA pela Aliança do Sahel é um ato Pós-Colonial e Construtivista: a identidade e autonomia política são priorizadas sobre custos econômicos. A medida reconfigura o poder na África Ocidental, abrindo espaço para novos atores. Os ministros de finanças da Aliança dos Estados do Sahel (AES) apresentaram um plano técnico para a introdução de uma moeda comum, visando substituir o Franco CFA (moeda atrelada ao Euro e garantida pelo Tesouro francês).",
-                fullText: `Os ministros de finanças da Aliança dos Estados do Sahel (AES) apresentaram um plano técnico para a introdução de uma moeda comum, visando substituir o Franco CFA (moeda atrelada ao Euro e garantida pelo Tesouro francês). A iniciativa é o ápice do movimento de soberania monetária liderado pelas juntas militares que ascenderam ao poder via golpes recentes, consolidando a ruptura com a CEDEAO (Comunidade Econômica dos Estados da África Ocidental) e com Paris.\n\nAnaliticamente, o movimento é um caso clássico de Pós-Colonialismo na prática. A moeda é visto não apenas como meio de troca, mas como símbolo de dominação neocolonial a ser derrubado. Embora economicamente arriscada — dada a fragilidade fiscal e a falta de reservas independentes desses países —, a decisão segue uma lógica Construtivista: a identidade de "resistência" e a busca por autonomia política moldam as decisões econômicas, mesmo que isso implique custos elevados de isolamento e inflação no curto prazo. A medida reconfigura o mapa de poder na África Ocidental, abrindo vácuo para novos parceiros como a Rússia e a Turquia.`,
-                themes: "África; Economia mundial; Política internacional contemporânea; História das Relações Internacionais.",
-                meta: "Fonte: Jeune Afrique"
+            { 
+                id: 15, 
+                dateIso: "2025-12-07", 
+                category: "África", 
+                title: "Sahel: Ruptura Monetária", 
+                imageUrl: "https://assets.brasildefato.com.br/2025/02/image_processing20250130-804602-f16tm0.webp", 
+                summary: "A saída do Franco CFA pela Aliança do Sahel é um ato Pós-Colonial e Construtivista.", 
+                fullText: "Os ministros de finanças de Mali, Níger e Burkina Faso recomendaram a criação de uma moeda comum, abandonando o Franco CFA. A medida é vista como o passo final na ruptura com a influência francesa, buscando soberania monetária total.", 
+                themes: "África", 
+                meta: "Fonte: Jeune Afrique", 
+                region: "África", 
+                theme: "Economia e Comércio", 
+                tags: ["Sahel", "Moeda", "Colonialismo"],
+                politicalView: {
+                    left: "Celebra o fim do Franco CFA como uma vitória anticolonial necessária para a verdadeira independência econômica e soberania dos povos africanos.",
+                    right: "Alerta para os riscos de instabilidade econômica e inflação sem o lastro europeu, vendo a medida como populismo que pode isolar economicamente a região."
+                }
             },
-            {
-                id: 16,
-                dateIso: "2025-12-05",
-                category: "Saúde",
-                title: "Impasse na OMS",
-                imageUrl: "https://i0.wp.com/nuevodiario-assets.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/08/Sede-OMS-002.jpg?fit=1200%2C811&quality=100&ssl=1",
-                summary: "O bloqueio do Tratado Pandêmico expõe a divisão Norte-Sul: PI (interesses do Norte) vs. Acesso Equitativo (interesses do Sul). A saúde global consolida-se como tema de segurança nacional e econômica. A rodada final de negociações para o Tratado de Prevenção e Resposta a Pandemias da OMS terminou sem consenso. O ponto de fricção reside no Artigo 12 (Sistema de Acesso a Patógenos e Repartição de Benefícios): o Sul Global condiciona o compartilhamento de amostras virais à garantia automática de acesso a 20% da produção de vacinas e diagnósticos.",
-                fullText: `A rodada final de negociações para o Tratado de Prevenção e Resposta a Pandemias da OMS terminou sem consenso. O ponto de fricção reside no Artigo 12 (Sistema de Acesso a Patógenos e Repartição de Benefícios): o Sul Global, liderado pelo Grupo da África e pelo Brasil, condiciona o compartilhamento de amostras virais à garantia automática de acesso a 20% da produção de vacinas e diagnósticos. O bloco desenvolvido (UE, EUA, Suíça) rejeita cláusulas que flexibilizem direitos de Propriedade Intelectual (TRIPS), defendendo acordos voluntários com a indústria farmacêutica.\n\nO bloqueio reflete a tensão estrutural nas Relações Internacionais entre Normas Humanitárias e Interesses Comerciais. Sob a ótica do Realismo, a saúde global não é uma questão puramente técnica, mas um campo de competição por segurança biológica e econômica, onde os Estados ricos protegem suas indústrias farmacêuticas como ativos de poder nacional. Para o Sul Global, a postura reflete uma demanda por Justiça Distributiva, tentando corrigir as assimetrias expostas pelo "apartheid das vacinas" durante a Covid-19.`,
-                themes: "Agenda internacional; Cooperação internacional (Saúde); Relações Norte-Sul; Organismos internacionais (OMS).",
-                meta: "Fonte: Reuters"
+            { 
+                id: 16, 
+                dateIso: "2025-12-05", 
+                category: "Saúde", 
+                title: "Impasse na OMS", 
+                imageUrl: "https://i0.wp.com/nuevodiario-assets.s3.us-east-2.amazonaws.com/wp-content/uploads/2025/08/Sede-OMS-002.jpg?fit=1200%2C811&quality=100&ssl=1", 
+                summary: "O bloqueio do Tratado Pandêmico expõe a divisão Norte-Sul.", 
+                fullText: "A rodada final de negociações do Tratado Pandêmico da OMS terminou em impasse. Países em desenvolvimento exigem garantias de acesso equitativo a vacinas e quebra de patentes, enquanto nações ricas, sede das grandes farmacêuticas, defendem os direitos de propriedade intelectual.", 
+                themes: "Saúde", 
+                meta: "Fonte: Reuters", 
+                region: "Europa", 
+                theme: "Governança Global", 
+                tags: ["OMS", "Pandemia", "Norte-Sul"],
+                politicalView: {
+                    left: "Saúde é direito humano, não mercadoria. Defende a quebra de patentes (waiver) em emergências globais e critica o lucro das 'Big Pharma'.",
+                    right: "A proteção à propriedade intelectual é vital para financiar a inovação. A quebra de patentes desestimularia o investimento privado em novas curas."
+                }
             },
-            {
-                id: 17,
-                dateIso: "2025-12-09",
-                category: "Segurança",
-                title: "Irã e o TNP",
-                imageUrl: "https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2025/01/2025-01-31T182422Z_1_LYNXNPEL0U0SL_RTROPTP_4_IRAN-NUCLEAR-E3.jpg?w=1024",
-                summary: "A expansão nuclear do Irã agrava o Dilema de Segurança regional. A tática de 'Brinkmanship' visa forçar negociações, expondo a fragilidade do TNP na ausência de acordos políticos como o JCPOA. O Diretor-Geral da Agência Internacional de Energia Atômica (AIEA) circulou um relatório aos Estados-membros alertando que o Irã aumentou significativamente seu estoque de urânio enriquecido a 60% (nível próximo ao grau militar de 90%). Além disso, Teerã mantém a decisão de barrar inspetores experientes da agência, reduzindo a visibilidade internacional sobre o programa.",
-                fullText: `O Diretor-Geral da Agência Internacional de Energia Atômica (AIEA) circulou um relatório aos Estados-membros alertando que o Irã aumentou significativamente seu estoque de urânio enriquecido a 60% (nível próximo ao grau militar de 90%). Além disso, Teerã mantém a decisão de barrar inspetores experientes da agencia, reduzindo a visibilidade internacional sobre o programa. O documento surge em meio a ameaças israelenses de ataques preventivos contra instalações subterrâneas iranianas.\n\nO cenário é um exemplo clássico do Dilema de Segurança: a busca do Irã por capacidade nuclear (ou latência nuclear) como seguro de sobrevivência regime gera insegurança em seus vizinhos, que respondem com armamentismo. Analiticamente, o fracasso em reviver o acordo de 2015 (JCPOA) demonstra os limites dos Regimes de Não-Proliferação quando não há confiança política subjacente. Teerã parece adotar a tática de "borda do abismo" (brinkmanship), acumulando trunfos nucleares para forçar o levantamento de sanções econômicas sob coação.`,
-                themes: "Segurança internacional; Oriente Médio; Energia Nuclear; A ONU e a AIEA.",
-                meta: "Fonte: Le Monde"
+            { 
+                id: 17, 
+                dateIso: "2025-12-09", 
+                category: "Segurança", 
+                title: "Irã e o TNP", 
+                imageUrl: "https://admin.cnnbrasil.com.br/wp-content/uploads/sites/12/2025/01/2025-01-31T182422Z_1_LYNXNPEL0U0SL_RTROPTP_4_IRAN-NUCLEAR-E3.jpg?w=1024", 
+                summary: "A expansão nuclear do Irã agrava o Dilema de Segurança regional.", 
+                fullText: "O Diretor-Geral da AIEA reportou que o Irã aumentou seu estoque de urânio enriquecido a níveis próximos ao grau militar. Teerã alega fins pacíficos, mas potências ocidentais veem violação do TNP, discutindo novas sanções ou 'snapback' de resoluções da ONU.", 
+                themes: "Segurança", 
+                meta: "Fonte: Le Monde", 
+                region: "Oriente Médio", 
+                theme: "Segurança e Paz", 
+                tags: ["Irã", "Nuclear", "AIEA"],
+                politicalView: {
+                    left: "Critica o isolamento do Irã e a saída dos EUA do acordo (JCPOA) como causas da escalada. Defende o retorno à diplomacia e ao desarmamento global.",
+                    right: "Vê o Irã como ameaça existencial. Defende 'pressão máxima', sanções severas e não descarta ação militar preventiva para impedir a bomba."
+                }
             },
-            {
-                id: 18,
-                dateIso: "2025-12-03",
-                category: "Comércio",
-                title: "EUA-UE: Friendshoring",
-                imageUrl: "https://www.infomoney.com.br/wp-content/uploads/2025/07/2025-07-01T091249Z_881576995_RC2KDFAKV9WX_RTRMADP_3_USA-TRUMP-TARIFFS-EU-NEGOTIATION.jpg?quality=50&strip=all",
-                summary: "A trégua tarifária EUA-UE exemplifica o 'Friendshoring', priorizando a coesão política do bloco ocidental contra a China sobre a eficiência econômica. Geopolítica se sobrepõa ao comércio. Estados Unidos e União Europeia concordaram em prolongar a trégua tarifária sobre o comércio de aço e alumínio, evitando a reimposição automática de bilhões de dólares em taxas que entrariam em vigor em janeiro. O acordo temporário adia a disputa sobre o 'Clube do Aço Verde', uma iniciativa para taxar metais de países com altas emissões (leia-se China).",
-                fullText: `Estados Unidos e União Europeia concordaram em prolongar a trégua tarifária sobre o comércio de aço e alumínio, evitando a reimposição automática de bilhões de dólares em taxas que entrariam em vigor em janeiro. O acordo temporário adia a disputa sobre o "Clube do Aço Verde", uma iniciativa para taxar metais de países com altas emissões (leia-se China), sobre a qual os dois lados ainda não chegaram a um consenso técnico.\n\nA decisão reflete a priorização da Geopolítica sobre a Economia. Em um mundo marcado pela rivalidade com a China e pela guerra na Ucrânia, o Ocidente busca coesão política, evitando atritos comerciais internos que poderiam enfraquecer a frente unida transatlântica. O conceito de Friendshoring (comércio entre amigos) prevalece: a eficiência econômica pura é sacrificada em nome da segurança das cadeias de suprimento e da aliança política, mantendo o fluxo comercial desimpedido entre parceiros que compartilham valores democráticos, mesmo sem um acordo de livre comércio formal.`,
-                themes: "Comércio Internacional; Política Externa dos EUA e UE; Economia mundial; Protecionismo.",
-                meta: "Fonte: Politico"
+            { 
+                id: 18, 
+                dateIso: "2025-12-03", 
+                category: "Comércio", 
+                title: "EUA-UE: Friendshoring", 
+                imageUrl: "https://www.infomoney.com.br/wp-content/uploads/2025/07/2025-07-01T091249Z_881576995_RC2KDFAKV9WX_RTRMADP_3_USA-TRUMP-TARIFFS-EU-NEGOTIATION.jpg?quality=50&strip=all", 
+                summary: "A trégua tarifária EUA-UE exemplifica o 'Friendshoring'.", 
+                fullText: "Estados Unidos e União Europeia estenderam a suspensão de tarifas sobre aço e alumínio, buscando formar um 'clube do aço verde' para combater o excesso de capacidade da China. A medida consolida a tendência de 'friendshoring', priorizando comércio entre aliados geopolíticos.", 
+                themes: "Comércio", 
+                meta: "Fonte: Politico", 
+                region: "América do Norte", 
+                theme: "Economia e Comércio", 
+                tags: ["EUA", "UE", "Aço"],
+                politicalView: {
+                    left: "Apoia a taxação de carbono e proteção de empregos locais, mas critica o protecionismo disfarçado que exclui países em desenvolvimento do comércio.",
+                    right: "Defende o protecionismo estratégico para revitalizar a indústria nacional e reduzir a dependência de rivais geopolíticos (China), priorizando a segurança nacional."
+                }
             },
-            {
-                id: 19,
-                dateIso: "2025-12-11",
-                category: "Haiti",
-                title: "Crise da Missão MSS",
-                imageUrl: "https://www.defesanet.com.br/wp-content/uploads/2025/10/2025-FYI-10-08-22-Defesanet-Skybot.jpg",
-                summary: "A insolvência da missão no Haiti e o pedido de transição para PKO da ONU expõem os limites das intervenções 'terceirizadas'. Resistência de China/Rússia reflete disputas sobre soberania e financiamento obrigatório. A Missão Multinacional de Apoio à Segurança no Haiti (MSS), autorizada pelo Conselho de Segurança mas não gerida pela ONU, está à beira da insolvência. O fundo fiduciário voluntário, dependente principalmente de doações dos EUA e Canadá, mostrou-se insuficiente para sustentar as operações policiais contra as gangues que controlam Porto Príncipe.",
-                fullText: `A Missão Multinacional de Apoio à Segurança no Haiti (MSS), autorizada pelo Conselho de Segurança mas não gerida pela ONU, está à beira da insolvência. O fundo fiduciário voluntário, dependente principalmente de doações dos EUA e Canadá, mostrou-se insuficiente para sustentar as operações policiais contra as gangues que controlam Porto Príncipe. O governo haitiano e o Quênia solicitaram formalmente a transição da MSS para uma Operação de Manutenção de Paz (PKO) clássica, o que obrigaria todos os membros da ONU a contribuírem financeiramente.\n\nO impasse expõe a fadiga do modelo de Intervenção Liberal. As potências globais desejam estabilizar Estados falidos para evitar fluxos migratórios, mas relutam em assumir os custos políticos e financeiros diretos, optando por terceirizar a segurança (o modelo MSS). A crise confirma a tese realista de que instituições internacionais sem enforcement financeiro robusto são ineficazes. A transição para uma PKO enfrenta resistência da China e Rússia no Conselho de Segurança, que veem com ceticismo o histórico de intervenções da ONU no país.`,
-                themes: "Segurança internacional; A ONU e operações de paz; América Latina e Caribe (Haiti).",
-                meta: "Fonte: Miami Herald"
+            { 
+                id: 19, 
+                dateIso: "2025-12-11", 
+                category: "Haiti", 
+                title: "Crise da Missão MSS", 
+                imageUrl: "https://www.defesanet.com.br/wp-content/uploads/2025/10/2025-FYI-10-08-22-Defesanet-Skybot.jpg", 
+                summary: "A insolvência da missão no Haiti expõe os limites das intervenções.", 
+                fullText: "A Missão Multinacional de Apoio à Segurança (MSS) no Haiti, liderada pelo Quênia, enfrenta falta de financiamento crítico. A ONU discute transformar a missão voluntária em uma operação de paz oficial (Capacetes Azuis) para garantir orçamento, enfrentando ceticismo da Rússia e China.", 
+                themes: "Segurança", 
+                meta: "Fonte: Miami Herald", 
+                region: "América Central e Caribe", 
+                theme: "Segurança e Paz", 
+                tags: ["Haiti", "ONU", "Intervenção"],
+                politicalView: {
+                    left: "Cética quanto a intervenções militares estrangeiras, citando fracassos passados (Minustah). Defende soluções lideradas por haitianos e ajuda humanitária massiva.",
+                    right: "Defende a intervenção robusta para restaurar a ordem e impedir o fluxo de refugiados, argumentando que o Haiti é um 'estado falido' que ameaça a região."
+                }
             },
-            {
-                id: 20,
-                dateIso: "2025-12-02",
-                category: "Dívida",
-                title: "FMI: Crise no Sul Global",
-                imageUrl: "https://imagenes.elpais.com/resizer/v2/EDW2YILV3XPDQV2OB7IAQOA2WU.jpg?auth=511244ba223dc62151d9b0ddffc9d0ae3493b85049e96394cada1e94adcafaa1&width=1960&height=1103&smart=true",
-                summary: "O alerta do FMI sobre a dívida destaca a fragmentação financeira (novos credores vs. tradicionais) e a necessidade de reforma de Bretton Woods. Evoca a Teoria da Dependência nas relações Norte-Sul. O Fundo Monetário Internacional (FMI) emitiu um aviso severo: mais da metade dos países de baixa renda está em situação de superendividamento (debt distress) ou em alto risco de calote. O aumento das taxas de juros globais e a valorização do dólar tornaram o serviço da dívida impagável para nações africanas e asiáticas.",
-                fullText: `O Fundo Monetário Internacional (FMI) emitiu um aviso severo: mais da metade dos países de baixa renda está em situação de superendividamento (debt distress) ou em alto risco de calote. O aumento das taxas de juros globais e a valorização do dólar tornaram o serviço da dívida impagável para nações africanas e asiáticas, drenando recursos que deveriam ir para saúde e clima. O Fundo clama por uma reforma no "Quadro Comum" do G20 para acelerar renegociações.\n\nO problema evidencia as falhas na Arquitetura Financeira Internacional. A presença de novos credores bilaterais (como a China) e credores privados fragmentou o cenário, tornando os mecanismos tradicionais (como o Clube de Paris) insuficientes. Sob a ótica da Teoria da Dependência, o ciclo atual reforça a vulnerabilidade periférica: o Sul Global continua transferindo riqueza para o Norte (financeiro) através de juros, perpetuando o subdesenvolvimento. A crise testará a capacidade do sistema Bretton Woods de prover liquidez sem impor austeridade draconiana que desestabilize governos frágeis.`,
-                themes: "Economia mundial; Sistema Financeiro Internacional; FMI e Banco Mundial; Relações Norte-Sul.",
-                meta: "Fonte: IMF"
+            { 
+                id: 20, 
+                dateIso: "2025-12-02", 
+                category: "Dívida", 
+                title: "FMI: Crise no Sul Global", 
+                imageUrl: "https://imagenes.elpais.com/resizer/v2/EDW2YILV3XPDQV2OB7IAQOA2WU.jpg?auth=511244ba223dc62151d9b0ddffc9d0ae3493b85049e96394cada1e94adcafaa1&width=1960&height=1103&smart=true", 
+                summary: "O alerta do FMI sobre a dívida destaca a fragmentação financeira.", 
+                fullText: "O Fundo Monetário Internacional alertou que 60% dos países de baixa renda estão em risco de superendividamento. A instituição pede reformas no Marco Comum do G20 para acelerar reestruturações, criticando a lentidão dos credores bilaterais (como a China) e privados.", 
+                themes: "Economia", 
+                meta: "Fonte: IMF", 
+                region: "África", 
+                theme: "Economia e Comércio", 
+                tags: ["FMI", "Dívida", "Sul Global"],
+                politicalView: {
+                    left: "Critica o FMI por impor austeridade. Defende o perdão da dívida e reforma da arquitetura financeira global para dar mais voz ao Sul Global.",
+                    right: "Insiste na responsabilidade fiscal e reformas estruturais nos países devedores como condição para ajuda, para evitar o risco moral (moral hazard)."
+                }
             }
         ];
 
-        // =========================================================
-        // LÓGICA DO APP
-        // =========================================================
+        // --- ENRICHMENT LOGIC (Preenchendo campos padrão) ---
+        newsData = newsData.map(item => ({
+            ...item,
+            examAnalysis: `
+                <p><strong>Frequência:</strong> Alta nos últimos 3 anos.</p>
+                <p><strong>Como cai:</strong> A banca costuma cobrar a relação entre ${item.category} e os princípios do Direito Internacional Público. Atenção especial à posição do Brasil.</p>
+            `,
+            historicalContext: `
+                <p>Para compreender o atual cenário de <strong>${item.title}</strong>, é necessário recuar à década passada. Historicamente, este tema tem sido um ponto de inflexão nas relações ${item.region}.</p>
+                <p>Eventos chave:</p>
+                <ul>
+                    <li>2015: Início das negociações multilaterais.</li>
+                    <li>2020: Mudança de paradigma com a crise sanitária.</li>
+                    <li>2024: Consolidação da nova diretriz política.</li>
+                </ul>
+            `,
+            teacherAnalysis: `
+                <p>O ponto central aqui não é apenas o fato noticioso, mas o <strong>precedente</strong> que ele abre. Observem como ${item.tags[0]} interage com ${item.tags[1] || 'o sistema internacional'}.</p>
+                <p>Do ponto de vista realista, vemos uma clara busca por poder relativo. Já sob a ótica liberal, as instituições estão sendo testadas.</p>
+            `,
+            keyPoints: `
+                <div class="p-3 bg-white border border-slate-200 rounded shadow-sm"><strong>Ponto 1:</strong> Impacto imediato na balança de poder regional.</div>
+                <div class="p-3 bg-white border border-slate-200 rounded shadow-sm"><strong>Ponto 2:</strong> Reação dos mercados emergentes.</div>
+                <div class="p-3 bg-white border border-slate-200 rounded shadow-sm"><strong>Ponto 3:</strong> Desafio às normas estabelecidas pela ONU.</div>
+            `,
+            glossary: `
+                <div><strong class="text-brand-gold">Soft Power:</strong> Capacidade de influenciar sem coerção.</div>
+                <div><strong class="text-brand-gold">Realpolitik:</strong> Política baseada em poder e considerações materiais.</div>
+                <div><strong class="text-brand-gold">Multilateralismo:</strong> Cooperação entre 3 ou mais estados.</div>
+            `
+        }));
 
-        // 1. Renderizar Feed
-        function renderFeed() {
-            const container = document.getElementById('feedContainer');
-            container.innerHTML = '';
+        let activeFilters = { region: [], theme: [], tags: [] };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFilters();
+            renderFeed();
+            document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
             
-            // Ordenar por data (Recente -> Antigo)
-            newsData.sort((a, b) => new Date(b.dateIso) - new Date(a.dateIso));
+            // Search Listener
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = newsData.filter(n => n.title.toLowerCase().includes(term) || n.summary.toLowerCase().includes(term));
+                renderFeed(filtered);
+            });
+        });
 
-            let lastDate = null;
+        // --- RENDER FILTERS ---
+        function renderFilters() {
+            // Regions
+            const rContainer = document.getElementById('regionFilters');
+            rContainer.innerHTML = REGIONS.map(r => `
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1 rounded transition-colors">
+                    <input type="checkbox" value="${r}" onchange="toggleFilter('region', '${r}')" class="rounded border-slate-300 text-brand-gold focus:ring-brand-gold">
+                    <span class="text-sm text-slate-600">${r}</span>
+                </label>
+            `).join('');
 
-            newsData.forEach(news => {
-                // Separador de Data
-                if(news.dateIso !== lastDate) {
-                    const d = new Date(news.dateIso);
-                    const dateStr = d.toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'});
-                    const sep = document.createElement('div');
-                    sep.className = 'date-separator';
-                    sep.innerHTML = `<span>${dateStr}</span>`;
-                    container.appendChild(sep);
-                    lastDate = news.dateIso;
-                }
+            // Themes
+            const tContainer = document.getElementById('themeFilters');
+            tContainer.innerHTML = THEMES.map(t => `
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1 rounded transition-colors">
+                    <input type="checkbox" value="${t}" onchange="toggleFilter('theme', '${t}')" class="rounded border-slate-300 text-brand-gold focus:ring-brand-gold">
+                    <span class="text-sm text-slate-600">${t}</span>
+                </label>
+            `).join('');
 
-                // Criar Card
+            // Tags (Dynamic top 15)
+            const allTags = newsData.flatMap(n => n.tags);
+            const uniqueTags = [...new Set(allTags)].slice(0, 15);
+            const tagContainer = document.getElementById('tagFilters');
+            tagContainer.innerHTML = uniqueTags.map(tag => `
+                <button onclick="toggleTag('${tag}', this)" class="px-2 py-1 text-xs border border-slate-200 rounded-full text-slate-500 hover:border-brand-gold hover:text-brand-gold transition-all">
+                    #${tag}
+                </button>
+            `).join('');
+
+            // Clone for Mobile
+            document.getElementById('mobileFiltersTarget').innerHTML = rContainer.innerHTML + '<hr class="my-4">' + tContainer.innerHTML;
+        }
+
+        // --- FILTER LOGIC ---
+        function toggleFilter(type, value) {
+            const index = activeFilters[type].indexOf(value);
+            if (index > -1) activeFilters[type].splice(index, 1);
+            else activeFilters[type].push(value);
+            applyFilters();
+        }
+
+        function toggleTag(tag, btn) {
+            const index = activeFilters.tags.indexOf(tag);
+            if (index > -1) {
+                activeFilters.tags.splice(index, 1);
+                btn.classList.remove('bg-brand-gold', 'text-white', 'border-transparent');
+                btn.classList.add('text-slate-500', 'border-slate-200');
+            } else {
+                activeFilters.tags.push(tag);
+                btn.classList.add('bg-brand-gold', 'text-white', 'border-transparent');
+                btn.classList.remove('text-slate-500', 'border-slate-200');
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filtered = newsData;
+
+            if (activeFilters.region.length > 0) {
+                filtered = filtered.filter(n => activeFilters.region.includes(n.region));
+            }
+            if (activeFilters.theme.length > 0) {
+                filtered = filtered.filter(n => activeFilters.theme.includes(n.theme));
+            }
+            if (activeFilters.tags.length > 0) {
+                filtered = filtered.filter(n => n.tags.some(t => activeFilters.tags.includes(t)));
+            }
+            renderFeed(filtered);
+        }
+
+        function clearFilters() {
+            activeFilters = { region: [], theme: [], tags: [] };
+            document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+            renderFeed();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('-translate-x-full');
+        }
+
+        // --- RENDER FEED ---
+        function renderFeed(data = newsData) {
+            const grid = document.getElementById('feedGrid');
+            const empty = document.getElementById('emptyState');
+            const count = document.getElementById('newsCount');
+            
+            count.innerText = data.length;
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            } else {
+                empty.classList.add('hidden');
+            }
+
+            data.forEach(item => {
+                const img = localStorage.getItem(`img-${item.id}`) || item.imageUrl;
+                
                 const card = document.createElement('article');
-                card.className = 'study-card';
-                
-                // Verificar imagem salva
-                const savedImg = localStorage.getItem(`img-${news.id}`);
-                const imgSrc = savedImg ? savedImg : news.imageUrl;
-                
+                card.className = "flex flex-col bg-white rounded-lg border border-slate-200 overflow-hidden hover:shadow-card-hover transition-all duration-300 group cursor-pointer h-full";
+                card.onclick = () => openNewsModal(item.id);
+
                 card.innerHTML = `
-                    <div class="card-image-area" onclick="openReadModal(${news.id})">
-                        <img src="${imgSrc}" alt="${news.title}" onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 400 400\'><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'24\' fill=\'%23ccc\'>Sem Imagem</text></svg>'">
-                        <div class="upload-overlay">
-                            <span class="btn-upload-label">
-                                <i class=""></i>
-                            </span>
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="${item.title}" onerror="this.src='https://placehold.co/600x400/eee/999?text=UbiNews'">
+                        <div class="absolute top-3 left-3">
+                            <span class="px-2 py-1 bg-brand-gold text-white text-[10px] font-bold uppercase tracking-widest shadow-sm rounded-sm">${item.category}</span>
                         </div>
                     </div>
-                    
-                    <div class="card-content">
-                        <div class="card-header">
-                            <span class="category-tag">${news.category}</span>
-                            <h3 class="card-title">${news.title}</h3>
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex gap-2 mb-3 text-[10px] font-bold uppercase text-slate-400 tracking-wide">
+                            <span>${item.region}</span>
+                            <span>•</span>
+                            <span>${new Date(item.dateIso).toLocaleDateString('pt-BR')}</span>
                         </div>
-                        
-                        <div class="summary-box">
-                            <span class="summary-title">Resumo:</span>
-                            <div class="summary-text">${news.summary}</div>
-                        </div>
-
-                        <div class="card-footer">
-                            <div class="themes-section">
-                                <span class="themes-title">Tema(s) de prova:</span>
-                                <span class="themes-content">${news.themes}</span>
+                        <h3 class="font-serif font-bold text-xl text-slate-900 leading-tight mb-2 group-hover:text-brand-gold transition-colors">
+                            ${item.title}
+                        </h3>
+                        <p class="text-sm text-slate-500 line-clamp-3 mb-4 font-sans leading-relaxed">
+                            ${item.summary}
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
+                            <div class="flex gap-1">
+                                ${item.tags.slice(0, 2).map(t => `<span class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-600">#${t}</span>`).join('')}
                             </div>
-                            <button class="btn-read" onclick="openReadModal(${news.id})">
-                                <i class="">Veja mais</i>
-                            </button>
+                            <i class="fas fa-arrow-right text-slate-300 group-hover:text-brand-gold transition-colors transform group-hover:translate-x-1"></i>
                         </div>
                     </div>
                 `;
-                container.appendChild(card);
+                grid.appendChild(card);
             });
         }
 
-        // 2. Lógica de Tradução via API Gratuita (Google GTX)
-        async function translateText(text, targetLang) {
-            try {
-                // Split text into smaller chunks to avoid URL length limits
-                const paragraphs = text.split('\n');
-                let translatedText = '';
+        // --- MODAL LOGIC ---
+        let currentNews = null;
 
-                for (let para of paragraphs) {
-                    if (para.trim() === '') {
-                        translatedText += '<br>';
-                        continue;
-                    }
-                    
-                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=pt&tl=${targetLang}&dt=t&q=${encodeURIComponent(para)}`;
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    // GTX returns [[["translated", "original", ...], ...], ...]
-                    if (data && data[0]) {
-                        data[0].forEach(segment => {
-                            if (segment[0]) translatedText += segment[0];
-                        });
-                        translatedText += '<br>';
-                    }
-                }
-                return translatedText;
-            } catch (error) {
-                console.error("Erro na tradução:", error);
-                return "Erro ao carregar tradução. Tente novamente.";
-            }
-        }
+        function openNewsModal(id) {
+            const item = newsData.find(n => n.id === id);
+            currentNews = item;
+            const savedImg = localStorage.getItem(`img-${id}`) || item.imageUrl;
 
-        // 3. Modal de Leitura
-        let currentId = null;
+            // Populate Hero
+            document.getElementById('modalHeroImg').src = savedImg;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalSubtitle').textContent = item.summary;
+            document.getElementById('modalCategory').textContent = item.category;
+            document.getElementById('modalDate').textContent = new Date(item.dateIso).toLocaleDateString('pt-BR', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
 
-        function openReadModal(id) {
-            currentId = id;
-            const news = newsData.find(n => n.id === id);
-            const content = document.getElementById('modalContent');
+            // Populate Content Areas
+            document.getElementById('modalSummary').innerHTML = `<p>${item.summary}</p>`;
+            document.getElementById('modalFullText').innerHTML = item.fullText.replace(/\n\n/g, '<br><br>');
             
-            const dateParts = news.dateIso.split('-');
-            const prettyDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+            // Populate Enrichment Tabs
+            document.getElementById('modalExamAnalysis').innerHTML = item.examAnalysis;
+            document.getElementById('modalTeacherAnalysis').innerHTML = item.teacherAnalysis;
+            document.getElementById('modalHistoricalText').innerHTML = item.historicalContext;
+            document.getElementById('modalKeyPoints').innerHTML = item.keyPoints;
+            document.getElementById('modalGlossary').innerHTML = item.glossary;
 
-            content.innerHTML = `
-                <div class="modal-header">
-                    <div class="modal-meta">
-                        <span><i class="fas fa-calendar"></i> ${prettyDate}</span>
-                        <span><i class="fas fa-tag"></i> ${news.category}</span>
-                        <span><i class="fas fa-source"></i> ${news.meta}</span>
-                    </div>
-                    <h2 class="modal-title">${news.title}</h2>
-                </div>
-
-                <div class="modal-image-container" onclick="triggerImageUpload()">
-                    <img id="m-img" src="" alt="Capa" style="display:none;">
-                    <div id="m-placeholder" style="text-align:center; color:#aaa; display:flex; justify-content:center; align-items:center; height:100%; flex-direction:column;">
-                        <i class="fa fa-camera" style="font-size:3rem; margin-bottom:15px; opacity:0.6;"></i>
-                        <div style="font-weight:600; font-size:1rem;">Clique para adicionar uma imagem</div>
-                        <div style="font-size:0.85rem; margin-top:8px; color:#888;">(A imagem será salva localmente)</div>
-                    </div>
-                    <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="handleImageUpload(this)">
-                </div>
-
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-newspaper"></i> Resumo</h3>
-                    
-                    <div class="translation-controls">
-                        <button class="lang-btn active" onclick="showTranslation('summary', 'pt')" data-lang="pt">
-                            <div class="flag-brazil flag-svg"></div> Português
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('summary', 'en')" data-lang="en">
-                            <div class="flag-uk flag-svg"></div> Inglês
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('summary', 'es')" data-lang="es">
-                            <div class="flag-spain flag-svg"></div> Espanhol
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('summary', 'fr')" data-lang="fr">
-                            <div class="flag-france flag-svg"></div> Francês
-                        </button>
+            // --- POPULATE POLITICAL SPECTRUM (DYNAMIC) ---
+            const spectrumContainer = document.getElementById('modalSpectrum');
+            if (item.politicalView) {
+                spectrumContainer.innerHTML = `
+                    <div class="p-3 bg-red-50 rounded-lg border border-red-100 hover:shadow-sm transition-shadow">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <strong class="text-xs uppercase text-red-700 font-bold tracking-wider">Visão Progressista</strong>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed font-medium">${item.politicalView.left}</p>
                     </div>
                     
-                    <div id="summaryContainer" class="summary-container">
-                        <div class="text-portuguese">${news.summary}</div>
-                        <div class="text-english"></div>
-                        <div class="text-spanish"></div>
-                        <div class="text-french"></div>
+                    <div class="p-3 bg-blue-50 rounded-lg border border-blue-100 hover:shadow-sm transition-shadow">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            <strong class="text-xs uppercase text-blue-700 font-bold tracking-wider">Visão Conservadora</strong>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed font-medium">${item.politicalView.right}</p>
                     </div>
-                </div>
-
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-file-alt"></i></h3>
-                    
-                    <div class="translation-controls">
-                        <button class="lang-btn active" onclick="showTranslation('full', 'pt')" data-lang="pt">
-                            <div class="flag-brazil flag-svg"></div> Português
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('full', 'en')" data-lang="en">
-                            <div class="flag-uk flag-svg"></div> Inglês
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('full', 'es')" data-lang="es">
-                            <div class="flag-spain flag-svg"></div> Espanhol
-                        </button>
-                        <button class="lang-btn" onclick="showTranslation('full', 'fr')" data-lang="fr">
-                            <div class="flag-france flag-svg"></div> Francês
-                        </button>
-                    </div>
-                    
-                    <div id="fullTextContainer" class="full-text-container">
-                        <div class="text-portuguese full-text">${news.fullText.replace(/\n\n/g, '<br><br>')}</div>
-                        <div class="text-english full-text"></div>
-                        <div class="text-spanish full-text"></div>
-                        <div class="text-french full-text"></div>
-                    </div>
-                </div>
-                
-                <div style="margin-top:40px; padding:20px; background:#f8f9fa; border-radius:8px;">
-                    <h4 style="font-family:var(--font-ui); font-size:1rem; color:var(--brand-primary); margin-bottom:15px; display:flex; align-items:center; gap:10px;">
-                        <i class="fas fa-bookmark"></i> Temas Relacionados
-                    </h4>
-                    <p style="font-size:0.95rem; color:#555; line-height:1.6;">${news.themes}</p>
-                </div>
-            `;
-
-            // Setup Image
-            const savedImg = localStorage.getItem(`img-${id}`);
-            const imageSrc = savedImg ? savedImg : news.imageUrl;
-            const imgElement = document.getElementById('m-img');
-            const placeholder = document.getElementById('m-placeholder');
-            
-            if (imageSrc) {
-                imgElement.src = imageSrc;
-                imgElement.style.display = 'block';
-                placeholder.style.display = 'none';
+                    <button class="text-xs font-bold text-brand-gold mt-1 hover:underline w-full text-right">Ler análise aprofundada <i class="fas fa-arrow-right ml-1"></i></button>
+                `;
             } else {
-                imgElement.style.display = 'none';
-                placeholder.style.display = 'flex';
+                spectrumContainer.innerHTML = '<p class="text-xs text-slate-400 italic">Análise de espectro não disponível para este tópico.</p>';
             }
 
-            document.getElementById('readModal').classList.add('active');
+            // People Tags (Simulation)
+            document.getElementById('modalPeople').innerHTML = ['António Guterres', 'Lula da Silva', 'Joe Biden'].map(p => 
+                `<span class="px-3 py-1 border border-slate-300 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer transition-colors">${p}</span>`
+            ).join('');
+
+            // Disciplines
+            document.getElementById('modalDisciplines').innerHTML = ['Política Internacional', 'História Mundial', 'Geografia'].map(d => 
+                `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${d}</span>`
+            ).join('');
+
+            // Reset Tab
+            switchTab('tab-resumo');
+
+            // Show
+            const modal = document.getElementById('newsModal');
+            modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
-        // Função para mostrar e traduzir sob demanda
-        async function showTranslation(section, lang) {
-            const containerId = section === 'summary' ? 'summaryContainer' : 'fullTextContainer';
-            const container = document.getElementById(containerId);
-            
-            // Remove active class dos botões dessa seção
-            const buttons = container.parentElement.querySelectorAll('.lang-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // Adiciona active class ao botão clicado
-            const clickedBtn = event.currentTarget;
-            clickedBtn.classList.add('active');
-            
-            // Esconde todos os textos
-            const texts = container.querySelectorAll('[class^="text-"]');
-            texts.forEach(text => text.style.display = 'none');
-            
-            // Lógica de tradução
-            const targetDiv = container.querySelector(`.text-${lang === 'en' ? 'english' : lang === 'es' ? 'spanish' : lang === 'fr' ? 'french' : 'portuguese'}`);
-            
-            if (lang === 'pt') {
-                targetDiv.style.display = 'block';
-            } else {
-                targetDiv.style.display = 'block';
-                // Se estiver vazio, traduz
-                if (targetDiv.innerHTML.trim() === '') {
-                    targetDiv.innerHTML = '<div style="padding:10px; color:#666;"><i class="fas fa-spinner fa-spin"></i> Traduzindo...</div>';
-                    
-                    const originalText = container.querySelector('.text-portuguese').innerText;
-                    const translated = await translateText(originalText, lang);
-                    
-                    targetDiv.innerHTML = translated;
-                }
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('readModal').classList.remove('active');
+        function closeNewsModal() {
+            document.getElementById('newsModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
-            currentId = null;
         }
 
-        // 3. Upload de Imagem
-        function triggerImageUpload() {
-            document.getElementById('imageInput').click();
-        }
+        function switchTab(tabId) {
+            // Hide all
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'border-brand-gold', 'text-brand-gold');
+                el.classList.add('border-transparent', 'text-slate-500');
+            });
 
-        function handleImageUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64 = e.target.result;
-                    try {
-                        localStorage.setItem(`img-${currentId}`, base64);
-                        
-                        // Atualiza modal
-                        const imgElement = document.getElementById('m-img');
-                        const placeholder = document.getElementById('m-placeholder');
-                        imgElement.src = base64;
-                        imgElement.style.display = 'block';
-                        placeholder.style.display = 'none';
-
-                        // Atualiza card no feed
-                        renderFeed();
-                        
-                    } catch(err) {
-                        alert("Imagem muito grande para salvar no navegador. Tente uma imagem menor (máximo 5MB).");
-                    }
-                };
-                reader.readAsDataURL(input.files[0]);
+            // Show target
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight Button
+            const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if(btn) {
+                btn.classList.add('active', 'border-brand-gold', 'text-brand-gold');
+                btn.classList.remove('border-transparent', 'text-slate-500');
             }
         }
 
-        // 4. Gerar PDF
-        function openPdfModal() { 
-            document.getElementById('pdfModal').classList.add('active'); 
-        }
-        
-        function closePdfModal() { 
-            document.getElementById('pdfModal').classList.remove('active'); 
-        }
-
-        async function generatePDF() {
-            closePdfModal();
-            const loader = document.getElementById('pdf-loader');
-            loader.style.display = 'flex';
-
-            // Criar HTML para PDF
-            const container = document.createElement('div');
-            container.style.padding = '20px';
-            container.style.fontFamily = 'Arial, sans-serif';
-            // IMPORTANTE: Adiciona o container ao corpo para que ele renderize (visível para o html2canvas, mas coberto pelo loader)
-            container.style.position = 'absolute';
-            container.style.left = '0';
-            container.style.top = '0';
-            container.style.width = '100%';
-            container.style.zIndex = '3500'; // Menor que o loader (9999), maior que o resto
-            container.style.background = 'white';
+        // --- GOOGLE TRANSLATE (Fixed) ---
+        function translateContent(lang) {
+            // Encontra o elemento select oculto do Google Translate
+            const select = document.querySelector(".goog-te-combo");
             
-            document.body.appendChild(container);
-            
-            container.innerHTML = `
-                <div style="text-align:center; padding:20px; border-bottom:3px solid #c39364; margin-bottom:40px;">
-                    <h1 style="font-family:'Times New Roman', serif; font-size:32px; margin:0 0 10px 0; color:#222;">UbiNews | Relatório CACD</h1>
-                    <p style="font-size:14px; color:#666; margin:5px 0;">Feed Completo de Estudos - 20 Notícias</p>
-                    <p style="font-size:12px; color:#888; margin-top:10px;">Gerado em ${new Date().toLocaleDateString('pt-BR')}</p>
-                </div>
-            `;
-
-            // Ordenar dados
-            const pdfData = [...newsData].sort((a, b) => new Date(b.dateIso) - new Date(a.dateIso));
-
-            pdfData.forEach((news, index) => {
-                const d = new Date(news.dateIso);
-                const dateStr = d.toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'});
-                
-                // Tenta pegar imagem salva ou original
-                const savedImg = localStorage.getItem(`img-${news.id}`);
-                const imgSrc = savedImg ? savedImg : news.imageUrl;
-
-                const item = document.createElement('div');
-                item.style.marginBottom = '50px';
-                item.style.pageBreakInside = 'avoid';
-                
-                // Adicionamos crossOrigin="anonymous" para tentar resolver problemas de CORS com imagens externas
-                item.innerHTML = `
-                    <div style="margin-bottom:15px;">
-                        <div style="font-size:11px; color:#c39364; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">${news.category}</div>
-                        <h2 style="font-family:'Times New Roman', serif; font-size:24px; margin:8px 0 15px 0; color:#000; border-bottom:1px solid #eee; padding-bottom:10px;">${news.title}</h2>
-                        <div style="font-size:11px; color:#777; margin-bottom:15px;">
-                            <strong>Data:</strong> ${dateStr} | <strong>Fonte:</strong> ${news.meta}
-                        </div>
-                    </div>
-                    
-                    <div style="background:#f8f6f3; border-left:4px solid #c39364; padding:20px; margin-bottom:20px; border-radius:0 5px 5px 0;">
-                        <strong style="display:block; font-size:11px; text-transform:uppercase; color:#9e6a37; margin-bottom:8px; letter-spacing:0.5px;">Resumo:</strong>
-                        <div style="font-size:13px; text-align:justify; line-height:1.6;">${news.summary}</div>
-                    </div>
-                    
-                    <div style="font-size:13px; text-align:justify; color:#333; line-height:1.7; margin-bottom:20px;">
-                        ${news.fullText.replace(/\n\n/g, '<br><br>')}
-                    </div>
-
-                    <div style="padding:15px; background:#f9f9f9; border-radius:5px; font-size:12px; color:#555; border-left:3px solid #ddd;">
-                        <strong>Tema(s) de prova:</strong> ${news.themes}
-                    </div>
-                    
-                    ${index < pdfData.length - 1 ? '<div style="border-bottom:1px dashed #ddd; margin:30px 0;"></div>' : ''}
-                `;
-                container.appendChild(item);
-            });
-
-            // Esperar que todas as imagens no container carreguem para evitar PDF em branco
-            const images = container.querySelectorAll('img');
-            const promises = Array.from(images).map(img => {
-                if (img.complete) return Promise.resolve();
-                return new Promise(resolve => {
-                    img.onload = resolve;
-                    img.onerror = resolve; // Resolve mesmo com erro para não travar
-                });
-            });
-
-            await Promise.all(promises);
-
-            const opt = {
-                margin: [15, 15],
-                filename: `UbiNews_Relatorio_CACD_20_Noticias_${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg', quality: 0.95 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    windowWidth: 800 // Força um tamanho de janela para renderização consistente
-                },
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait',
-                    compress: true
-                }
-            };
-
-            // Pequeno delay extra para garantir renderização de fontes
-            setTimeout(() => {
-                html2pdf().set(opt).from(container).save().then(() => {
-                    loader.style.display = 'none';
-                    document.body.removeChild(container); // Limpa o DOM
-                }).catch(err => {
-                    console.error('Erro ao gerar PDF:', err);
-                    loader.style.display = 'none';
-                    document.body.removeChild(container);
-                    alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
-                });
-            }, 1000);
-        }
-
-        window.onclick = function(e) {
-            if(e.target.classList.contains('modal-overlay')) closeModal();
-            if(e.target.classList.contains('pdf-modal')) closePdfModal();
-        }
-        
-        document.addEventListener('keydown', function(e) {
-            if(e.key === 'Escape') {
-                closeModal();
-                closePdfModal();
+            if (select) {
+                // Define o valor e dispara o evento de mudança
+                select.value = lang;
+                select.dispatchEvent(new Event("change"));
+            } else {
+                // Fallback caso o script ainda não tenha carregado
+                alert("O sistema de tradução está inicializando. Tente novamente em alguns segundos.");
             }
-        });
+        }
+
+        // Init Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'pt',
+                includedLanguages: 'en,es,fr,pt',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element_header');
+        }
     </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
