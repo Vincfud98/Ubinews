@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UbiNews | Notícias Diárias</title>
+    <title>UbiNews | Inteligência Diária</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,20 +39,32 @@
     </script>
 
     <style>
-        /* Google Translate Customization */
+        /* CORREÇÃO DO GOOGLE TRANSLATE */
+        /* Oculta a barra superior chata */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
+        
+        /* Oculta o texto "Powered by Google" */
         .goog-te-gadget span { display: none !important; }
         .goog-te-gadget { font-size: 0 !important; color: transparent !important; }
-        /* Mantemos o combo acessível no DOM mas invisível */
-        .goog-te-combo { opacity: 0; height: 0; width: 0; overflow: hidden; position: absolute; pointer-events: none; }
         
+        /* CRÍTICO: Não use display:none ou opacity:0 no container principal */
+        /* Movemos para fora da tela para garantir a renderização */
+        #google_translate_element_header {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #c39364; border-radius: 3px; }
         
-        /* Line Clamp for 3 lines */
+        /* Line Clamp */
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -92,7 +104,7 @@
                     <img src="https://yt3.googleusercontent.com/ytc/AIdro_lHPfbyFhxIP0ptIdo8mkYx1E5rjl9u_S6OaTQpwzdWfAQ=s900-c-k-c0x00ffffff-no-rj" alt="Logo UbiNews" class="h-9 w-9 rounded object-cover shadow-sm group-hover:opacity-80 transition-opacity">
                     <div class="flex flex-col">
                         <span class="font-serif font-bold text-xl leading-none tracking-tight">Ubi<span class="text-brand-gold">News</span></span>
-                        <span class="text-[0.6rem] uppercase tracking-[0.2em] text-slate-400 font-bold">Notícias Diárias</span>
+                        <span class="text-[0.6rem] uppercase tracking-[0.2em] text-slate-400 font-bold">Inteligência Diária</span>
                     </div>
                 </div>
             </div>
@@ -105,7 +117,7 @@
 
             <div class="flex items-center gap-3">
                 <div id="google_translate_element_header"></div>
-                
+
                 <div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden border border-slate-300 cursor-pointer">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=UbiUser" alt="User">
                 </div>
@@ -705,6 +717,18 @@
 
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Tenta inicializar globalmente a função do Google Translate se ainda não existir
+            if (!window.googleTranslateElementInit) {
+                 window.googleTranslateElementInit = function() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'pt',
+                        includedLanguages: 'en,es,fr,pt',
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                        autoDisplay: false
+                    }, 'google_translate_element_header');
+                 }
+            }
+
             renderFilters();
             renderFeed();
             document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -947,29 +971,29 @@
             }
         }
 
-        // --- GOOGLE TRANSLATE (Fixed) ---
+        // --- GOOGLE TRANSLATE (Optimized for Online Deployment) ---
         function translateContent(lang) {
-            // Encontra o elemento select oculto do Google Translate
-            const select = document.querySelector(".goog-te-combo");
-            
-            if (select) {
-                // Define o valor e dispara o evento de mudança
-                select.value = lang;
-                select.dispatchEvent(new Event("change"));
-            } else {
-                // Fallback caso o script ainda não tenha carregado
-                alert("O sistema de tradução está inicializando. Tente novamente em alguns segundos.");
-            }
-        }
+            const checkInterval = 200; // Check every 200ms
+            const maxRetries = 50;     // Try for 10 seconds (50 * 200ms)
+            let retryCount = 0;
 
-        // Init Google Translate
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'pt',
-                includedLanguages: 'en,es,fr,pt',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element_header');
+            const attemptTranslation = setInterval(() => {
+                const select = document.querySelector(".goog-te-combo");
+                
+                if (select) {
+                    clearInterval(attemptTranslation);
+                    select.value = lang;
+                    select.dispatchEvent(new Event("change"));
+                    select.dispatchEvent(new Event("input"));
+                } else {
+                    retryCount++;
+                    if (retryCount >= maxRetries) {
+                        clearInterval(attemptTranslation);
+                        // Mensagem amigável focada em AdBlock/Browser security, já que está online
+                        alert("O sistema de tradução não pôde ser iniciado. Por favor, desative bloqueadores de anúncios para este site, pois eles impedem o carregamento do Google Tradutor.");
+                    }
+                }
+            }, checkInterval);
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
